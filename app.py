@@ -8,8 +8,8 @@ import io
 
 # Setup Google Sheets connection
 scope = ['https://www.googleapis.com/auth/spreadsheets']
-creds = Credentials.from_service_account_file(
-    r'C:\Users\USER\Desktop\hunter\AgentPortalServiceAccount.json', scopes=scope
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"], scopes=scope
 )
 client = gspread.authorize(creds)
 
@@ -424,3 +424,4 @@ elif st.session_state.page == 'admin':
     if st.button("Back to Control Hub", use_container_width=True):
         st.session_state.page = 'control_hub'
         st.rerun()
+
