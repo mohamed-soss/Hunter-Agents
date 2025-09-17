@@ -7,8 +7,14 @@ import matplotlib.pyplot as plt
 import io
 
 # Setup Google Sheets connection
-scope = ['https://www.googleapis.com/auth/spreadsheets']
-creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
+scope = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"], scopes=scope
+)
 client = gspread.authorize(creds)
 
 # Open the Google Sheet using provided Sheet ID
@@ -422,6 +428,7 @@ elif st.session_state.page == 'admin':
     if st.button("Back to Control Hub", use_container_width=True):
         st.session_state.page = 'control_hub'
         st.rerun()
+
 
 
 
