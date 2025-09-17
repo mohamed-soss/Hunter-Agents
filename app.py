@@ -12,10 +12,15 @@ scope = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-creds = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"], scopes=scope
-)
+# Fix private_key formatting (replace \n with real newlines)
+service_account_info = dict(st.secrets["gcp_service_account"])
+if isinstance(service_account_info.get("private_key"), str):
+    service_account_info["private_key"] = service_account_info["private_key"].replace("\\n", "\n")
+
+creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
 client = gspread.authorize(creds)
+
+
 
 # Open the Google Sheet using provided Sheet ID
 SHEET_ID = "1PzBTiG0XkMOlnq0o-rO80_tg252nxtxOt5-aX1h0ivc"
@@ -428,6 +433,7 @@ elif st.session_state.page == 'admin':
     if st.button("Back to Control Hub", use_container_width=True):
         st.session_state.page = 'control_hub'
         st.rerun()
+
 
 
 
