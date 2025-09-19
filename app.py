@@ -255,6 +255,7 @@ st.markdown("""
     }
     
     /* Form Submit Buttons */
+    div[data-testid="column"]:div > div > div > button,
     .stForm > div > button {
         background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
         color: #ffffff !important;
@@ -274,6 +275,7 @@ st.markdown("""
         margin-top: 1rem !important;
     }
     
+    div[data-testid="column"]:div > div > div > button:hover,
     .stForm > div > button:hover {
         transform: translateY(-3px) !important;
         box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
@@ -556,7 +558,7 @@ elif st.session_state.page == 'agent_dashboard':
     # Enhanced Sidebar - Clean with just logo and navigation
     with st.sidebar:
         st.markdown('<div style="padding: 1rem; text-align: center;">', unsafe_allow_html=True)
-        st.image("hunter logo-02.jpg", width=120, use_column_width=True)
+        st.image("hunter logo-02.jpg", width=120)
         st.markdown('</div>', unsafe_allow_html=True)
         
         if st.button("Callbacks", key="menu_callbacks"):
