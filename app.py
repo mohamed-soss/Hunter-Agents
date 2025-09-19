@@ -48,11 +48,51 @@ def get_df(worksheet):
     data = worksheet.get_all_values()
     return pd.DataFrame(data[1:], columns=data[0]) if len(data) > 1 else pd.DataFrame(columns=data[0])
 
-# Custom Components
-def create_hero_header(title):
-    """Create a beautiful hero header"""
-    st.markdown(f"""
-    <div style="
+# Streamlit config
+st.set_page_config(
+    page_title="Hunter Agents - Professional Portal",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Enhanced Custom CSS - Professional & Stunning Design
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
+    
+    /* Global Styles */
+    .main {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+    }
+    
+    .stApp {
+        background: transparent;
+    }
+    
+    /* Animated Background */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(1deg); }
+    }
+    
+    /* Header Styles */
+    .hero-header {
         font-family: 'Playfair Display', serif;
         font-size: 4.5rem;
         font-weight: 900;
@@ -66,24 +106,14 @@ def create_hero_header(title):
         position: relative;
         animation: glow 3s ease-in-out infinite alternate;
         text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
-    ">
-        {title}
-    </div>
-    <style>
-    @keyframes glow {{
-        from {{ filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }}
-        to {{ filter: drop-shadow(0 0 40px rgba(255, 107, 107, 0.5)); }}
-    }}
-    @media (max-width: 768px) {{
-        div[style*="4.5rem"] {{ font-size: 3rem !important; padding: 2rem 1rem !important; }}
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-def create_subheader(title):
-    """Create a beautiful subheader"""
-    st.markdown(f"""
-    <div style="
+    }
+    
+    @keyframes glow {
+        from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }
+        to { filter: drop-shadow(0 0 40px rgba(255, 107, 107, 0.5)); }
+    }
+    
+    .subheader {
         font-size: 2.5rem;
         font-weight: 700;
         background: linear-gradient(135deg, #ffffff 0%, #a8a8ff 100%);
@@ -92,10 +122,10 @@ def create_subheader(title):
         background-clip: text;
         margin-bottom: 2rem;
         position: relative;
-    ">
-        {title}
-    </div>
-    <div style="
+    }
+    
+    .subheader::after {
+        content: '';
         position: absolute;
         bottom: -10px;
         left: 0;
@@ -103,13 +133,10 @@ def create_subheader(title):
         height: 4px;
         background: linear-gradient(135deg, #00d4ff, #ff6b6b);
         border-radius: 2px;
-    "></div>
-    """, unsafe_allow_html=True)
-
-def create_card(title, content, card_class="elite-card"):
-    """Create a beautiful card component"""
-    st.markdown(f"""
-    <div class="{card_class}" style="
+    }
+    
+    /* Enhanced Cards */
+    .elite-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -120,30 +147,189 @@ def create_card(title, content, card_class="elite-card"):
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    " onmouseover="this.style.transform='translateY(-12px) scale(1.02)'; this.style.boxShadow='0 20px 60px rgba(0, 0, 0, 0.4)'; this.style.borderColor='rgba(0, 212, 255, 0.3)'" 
-       onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 32px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(255, 255, 255, 0.1)'">
-        <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg, #00d4ff, #ff6b6b, #ffd93d); transform: scaleX(0); transition: transform 0.4s ease;" 
-             onmouseover="this.style.transform='scaleX(1)'"></div>
-        <h3 style="color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 600; margin-bottom: 1rem; font-size: 1.5rem;">
-            {title}
-        </h3>
-        <div style="color: #ffffff; font-weight: 500; line-height: 1.6; font-family: 'Inter', sans-serif;">
-            {content}
-        </div>
-    </div>
-    <style>
-    .{card_class} {{ animation: slideInUp 0.8s ease-out; }}
-    @keyframes slideInUp {{
-        from {{ transform: translateY(50px); opacity: 0; }}
-        to {{ transform: translateY(0); opacity: 1; }}
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-def create_metric_card(value, label, delay=0):
-    """Create a beautiful metric card"""
-    st.markdown(f"""
-    <div class="metric-container" style="
+    }
+    
+    .elite-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b, #ffd93d);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+    
+    .elite-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        border-color: rgba(0, 212, 255, 0.3);
+    }
+    
+    .elite-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .elite-card-content {
+        color: #ffffff;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+    
+    /* Control Hub Cards */
+    .control-card {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .control-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: rotate 4s linear infinite;
+        pointer-events: none;
+    }
+    
+    @keyframes rotate {
+        100% { transform: rotate(360deg); }
+    }
+    
+    .control-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        border-color: #00d4ff;
+    }
+    
+    .control-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff, #00d4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+    
+    /* Enhanced Buttons - Fixed for deprecation */
+    .stButton > button {
+        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 0.8rem 2rem !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin: 0.5rem 0 !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
+        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
+    }
+    
+    .stButton > button:active {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3) !important;
+    }
+    
+    /* Form Submit Buttons */
+    div[data-testid="column"]:div > div > div > button,
+    .stForm > div > button {
+        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 1rem 2rem !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin-top: 1rem !important;
+    }
+    
+    div[data-testid="column"]:div > div > div > button:hover,
+    .stForm > div > button:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
+        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
+    }
+    
+    /* Form Elements */
+    .stTextInput > div > div > input,
+    .stSelectbox > div > div > select,
+    .stDateInput > div > div > input,
+    .stTextArea > div > div > textarea {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-weight: 500;
+        padding: 14px 16px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .stTextInput > div > div > input:focus,
+    .stSelectbox > div > div > select:focus,
+    .stDateInput > div > div > input:focus,
+    .stTextArea > div > div > textarea:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .stTextInput > div > div > input::placeholder,
+    .stTextArea > div > div > textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    /* Sidebar Enhancement */
+    .css-1d391kg {
+        background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* DataFrame Enhancement */
+    .stDataFrame {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Metric Cards */
+    .metric-container {
         background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
         backdrop-filter: blur(15px);
         border-radius: 20px;
@@ -152,51 +338,30 @@ def create_metric_card(value, label, delay=0):
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
-        margin: 1rem 0.5rem;
-        animation: fadeIn 1s ease-out;
-        animation-delay: {delay}s;
-    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 40px rgba(0, 212, 255, 0.2)'">
-        <div class="metric-value" style="
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        ">
-            {value}
-        </div>
-        <div class="metric-label" style="
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        ">
-            {label}
-        </div>
-    </div>
-    <style>
-    @keyframes fadeIn {{
-        from {{ opacity: 0; }}
-        to {{ opacity: 1; }}
-    }}
-    .metric-container:hover {{
-        transform: translateY(-5px) !important;
-        box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2) !important;
-    }}
-    @media (max-width: 768px) {{
-        .metric-container {{ margin: 0.5rem 0 !important; }}
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-def create_callback_card(row_data, idx):
-    """Create a beautiful callback card"""
-    status_class = f"status-{row_data['CB Type']}"
-    status_color = {"cold": "#ff6b6b", "warm": "#ffd93d", "hot": "#4caf50"}
+    }
     
-    st.markdown(f"""
-    <div class="callback-card fade-in" style="
+    .metric-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
+    }
+    
+    .metric-value {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    
+    .metric-label {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+    }
+    
+    /* Callback Cards */
+    .callback-card {
         background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%);
         border-left: 5px solid #00d4ff;
         border-radius: 16px;
@@ -206,140 +371,96 @@ def create_callback_card(row_data, idx):
         overflow: hidden;
         transition: all 0.3s ease;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        animation-delay: {idx * 0.1}s;
-        font-family: 'Inter', sans-serif;
-    " onmouseover="this.style.transform='translateX(8px)'; this.style.boxShadow='0 8px 30px rgba(0, 212, 255, 0.2)'; this.style.borderLeftColor='#ff6b6b'">
-        <div class="callback-header" style="
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        ">
-            <strong>{row_data["Full Name"]}</strong>
-            <span class="status-badge {status_class}" style="
-                padding: 4px 12px;
-                border-radius: 20px;
-                font-size: 0.8rem;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                background: rgba(76, 175, 80, 0.2);
-                color: {status_color.get(row_data['CB Type'], '#4caf50')};
-                border: 1px solid rgba(76, 175, 80, 0.3);
-            ">
-                {row_data["CB Type"].capitalize()}
-            </span>
-        </div>
-        <div class="callback-meta" style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
-            Address: {row_data["Address"]} | Phone: {row_data["Number"]} | MCN: {row_data["MCN"]}
-        </div>
-        <div class="callback-meta" style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
-            DOB: {row_data["DOB"]} | Date: {row_data["CB Date"]} | Time: {row_data["CB Timing"]}
-        </div>
-        <div class="callback-notes" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); line-height: 1.4; max-height: 60px; overflow: hidden;">
-            Notes: {row_data["Notes"][:150]}{"..." if len(str(row_data["Notes"])) > 150 else ""}
-        </div>
-        <div class="callback-notes" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); line-height: 1.4; max-height: 60px; overflow: hidden;">
-            Medical: {row_data["Medical Conditions"][:150]}{"..." if len(str(row_data["Medical Conditions"])) > 150 else ""}
-        </div>
-    </div>
-    <style>
-    @keyframes fadeIn {{
-        from {{ opacity: 0; transform: translateX(-20px); }}
-        to {{ opacity: 1; transform: translateX(0); }}
-    }}
-    .callback-card:hover {{
-        transform: translateX(8px) !important;
-        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2) !important;
-        border-left-color: #ff6b6b !important;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-def create_custom_button(label, key=None, on_click=None):
-    """Create a beautiful custom button"""
-    if on_click:
-        if st.button(label, key=key, on_click=on_click):
-            return True
-    else:
-        if st.button(label, key=key):
-            return True
-    return False
-
-# Minimal CSS - Only for animations and backgrounds
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
+    }
     
-    /* Minimal Background */
-    .stApp {{
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
-    }}
+    .callback-card:hover {
+        transform: translateX(8px);
+        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2);
+        border-left-color: #ff6b6b;
+    }
     
-    /* Sidebar Background */
-    section[data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%) !important;
-    }}
+    .callback-header {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
     
-    /* Basic animations */
-    @keyframes slideInUp {{
-        from {{ transform: translateY(50px); opacity: 0; }}
-        to {{ transform: translateY(0); opacity: 1; }}
-    }}
+    .callback-meta {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+    }
     
-    @keyframes fadeIn {{
-        from {{ opacity: 0; }}
-        to {{ opacity: 1; }}
-    }}
+    .callback-notes {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+        max-height: 60px;
+        overflow: hidden;
+    }
     
-    @keyframes slideInLeft {{
-        from {{ transform: translateX(-50px); opacity: 0; }}
-        to {{ transform: translateX(0); opacity: 1; }}
-    }}
+    /* Status Badges */
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
     
-    .slide-in-up {{ animation: slideInUp 0.8s ease-out; }}
-    .fade-in {{ animation: fadeIn 1s ease-out; }}
-    .slide-in-left {{ animation: slideInLeft 0.8s ease-out; }}
+    .status-cold { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 107, 107, 0.3); }
+    .status-warm { background: rgba(255, 217, 61, 0.2); color: #ffd93d; border: 1px solid rgba(255, 217, 61, 0.3); }
+    .status-hot { background: rgba(76, 175, 80, 0.2); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); }
     
-    /* Global text color */
-    .stApp * {{
-        font-family: 'Inter', sans-serif !important;
-        color: #ffffff !important;
-    }}
+    /* Animations */
+    @keyframes slideInUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
     
-    /* Fix for dark text on white backgrounds */
-    .stApp input, .stApp select, .stApp textarea {{
-        color: #ffffff !important;
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }}
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
     
-    .stApp input::placeholder {{
-        color: rgba(255, 255, 255, 0.6) !important;
-    }}
+    @keyframes slideInLeft {
+        from { transform: translateX(-50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
     
-    /* DataFrame fix */
-    .dataframe {{
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: #ffffff !important;
-    }}
+    .slide-in-up { animation: slideInUp 0.8s ease-out; }
+    .fade-in { animation: fadeIn 1s ease-out; }
+    .slide-in-left { animation: slideInLeft 0.8s ease-out; }
     
-    .dataframe th {{
-        background: rgba(0, 212, 255, 0.2) !important;
-        color: #ffffff !important;
-    }}
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-header { font-size: 3rem; padding: 2rem 1rem; }
+        .control-card { padding: 2rem 1rem; margin-bottom: 1.5rem; }
+        .elite-card { padding: 2rem 1.5rem; }
+    }
     
-    .dataframe td {{
-        color: #ffffff !important;
-    }}
+    /* Success/Error Messages */
+    .stSuccess, .stError, .stWarning, .stInfo {
+        border-radius: 12px;
+        border-left: 4px solid #00d4ff;
+        background: rgba(0, 212, 255, 0.1);
+        color: #ffffff;
+        font-weight: 500;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stError { border-left-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
     </style>
 """, unsafe_allow_html=True)
 
 # Animated Background
-st.markdown('<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%); animation: float 20s ease-in-out infinite;"></div><style>@keyframes float {{0%, 100% {{ transform: translateY(0px) rotate(0deg); }}50% {{ transform: translateY(-20px) rotate(1deg); }}}}</style>', unsafe_allow_html=True)
+st.markdown('<div class="animated-bg"></div>', unsafe_allow_html=True)
 
 # Session state
 if 'page' not in st.session_state:
@@ -353,55 +474,45 @@ if 'menu' not in st.session_state:
 with st.spinner('Initializing Hunter Agents Portal...'):
     time.sleep(0.5)
 
-# Control Hub Page
+# Control Hub Page - Enhanced
 if st.session_state.page == 'control_hub':
-    create_hero_header("Hunter Agents")
-    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem; font-family: Inter, sans-serif;">Professional insurance management system</div>', unsafe_allow_html=True)
+    # Hero Section
+    st.markdown('<div class="hero-header slide-in-up">Hunter Agents</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem;">Professional insurance management system</div>', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    # Enhanced Control Cards
+    col1, col2 = st.columns([1, 1])
     
     with col1:
-        create_card("Agent Portal", """
-        <div style="text-align: center;">
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-family: Inter, sans-serif; line-height: 1.6;">
-                Access your personalized dashboard, submit callbacks, 
-                and track performance metrics
-            </p>
-        </div>
-        """, "control-card fade-in")
-        if create_custom_button("Enter Portal", key="user_portal"):
+        st.markdown('<div class="control-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<h3>Agent Portal</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Access your personalized dashboard, submit callbacks, and track performance metrics</p>', unsafe_allow_html=True)
+        if st.button("Enter Portal", key="user_portal"):
             st.session_state.page = 'login'
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        create_card("Admin Console", """
-        <div style="text-align: center;">
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-family: Inter, sans-serif; line-height: 1.6;">
-                Complete system control, agent management, 
-                and performance analytics
-            </p>
-        </div>
-        """, "control-card fade-in")
-        if create_custom_button("Admin Access", key="admin_dashboard"):
+        st.markdown('<div class="control-card fade-in" style="animation-delay: 0.2s;">', unsafe_allow_html=True)
+        st.markdown('<h3>Admin Console</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Complete system control, agent management, and performance analytics</p>', unsafe_allow_html=True)
+        if st.button("Admin Access", key="admin_dashboard"):
             st.session_state.page = 'admin'
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Login Page
+# Login Page (User Portal) - Enhanced
 elif st.session_state.page == 'login':
-    create_hero_header("Secure Access")
+    st.markdown('<div class="hero-header slide-in-up">Secure Access</div>', unsafe_allow_html=True)
     
+    # Enhanced login card
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        create_card("Agent Authentication", """
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h3 style="color: #00d4ff; margin-bottom: 0.5rem; font-family: Playfair Display, serif; font-size: 1.8rem;">
-                Agent Authentication
-            </h3>
-            <p style="color: rgba(255,255,255,0.7); font-family: Inter, sans-serif;">
-                Please verify your identity to access the portal
-            </p>
-        </div>
-        """, "elite-card slide-in-up")
+        st.markdown('<div class="elite-card slide-in-up">', unsafe_allow_html=True)
+        st.markdown('<div style="text-align: center; margin-bottom: 2rem;">', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #00d4ff; margin-bottom: 0.5rem;">Agent Authentication</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.7);">Please verify your identity to access the portal</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
         agents_df = get_df(agents_sheet)
         if agents_df.empty:
@@ -414,9 +525,9 @@ elif st.session_state.page == 'login':
         selected_agent = st.selectbox("Select Your Name", agent_names, help="Choose your registered name")
         agent_code = st.text_input("Enter Your Access Code", type="password", help="Your unique agent code")
         
-        col_btn1, col_btn2 = st.columns(2)
+        col_btn1, col_btn2 = st.columns([1, 1])
         with col_btn1:
-            if create_custom_button("Login", key="login_submit"):
+            if st.button("Login", key="login_submit"):
                 matching_row = agents_df[
                     (agents_df['Agent Name'] == selected_agent) & 
                     (agents_df['Agent Code'] == agent_code)
@@ -430,69 +541,95 @@ elif st.session_state.page == 'login':
                     st.error("Invalid credentials. Please try again.")
         
         with col_btn2:
-            if create_custom_button("Back to Hub", key="back_to_hub"):
+            if st.button("Back to Hub", key="back_to_hub"):
                 st.session_state.page = 'control_hub'
                 st.rerun()
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# Agent Dashboard
+# Agent Dashboard - Enhanced
 elif st.session_state.page == 'agent_dashboard':
-    create_hero_header(f"Welcome, {st.session_state.agent_name}")
+    # Enhanced Header with Agent Info
+    st.markdown(
+        f'<div class="hero-header slide-in-up">Welcome, <span style="color: #00d4ff;">{st.session_state.agent_name}</span></div>', 
+        unsafe_allow_html=True
+    )
     
-    # Sidebar
+    # Enhanced Sidebar - Clean with just logo and navigation
     with st.sidebar:
         st.markdown('<div style="padding: 1rem; text-align: center;">', unsafe_allow_html=True)
         st.image("hunter logo-02.jpg", width=120)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        if create_custom_button("Callbacks", key="menu_callbacks"):
+        if st.button("Callbacks", key="menu_callbacks"):
             st.session_state.menu = "Callbacks"
             st.rerun()
         
         st.markdown('<div style="height: 1rem;"></div>', unsafe_allow_html=True)
         
-        if create_custom_button("Logout", key="agent_logout"):
+        if st.button("Logout", key="agent_logout"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.session_state.page = 'control_hub'
             st.rerun()
         
-        if create_custom_button("Control Hub", key="agent_back_hub"):
+        if st.button("Control Hub", key="agent_back_hub"):
             st.session_state.page = 'control_hub'
             st.rerun()
         
-        st.markdown('<div style="padding-top: 2rem; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-family: Inter, sans-serif;">Powered by Advanced Technology</div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding-top: 2rem; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.8rem;">', unsafe_allow_html=True)
+        st.markdown('Powered by Advanced Technology', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     menu = st.session_state.menu
 
+    # Enhanced Callbacks Section
     if menu == "Callbacks":
-        create_subheader("Your Performance Dashboard")
+        # Performance Metrics
+        st.markdown('<div class="subheader slide-in-left">Your Performance Dashboard</div>', unsafe_allow_html=True)
         
         callbacks_df = get_df(callbacks_sheet)
         agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == st.session_state.agent_name]
         total_callbacks = len(agent_callbacks)
         
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
-            create_metric_card(total_callbacks, "Total Callbacks", 0)
+            st.markdown('<div class="metric-container fade-in">', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-value">{total_callbacks}</div>', unsafe_allow_html=True)
+            st.markdown('<div class="metric-label">Total Callbacks</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
         with col2:
+            st.markdown('<div class="metric-container fade-in" style="animation-delay: 0.1s;">', unsafe_allow_html=True)
             today = datetime.date.today()
             today_callbacks = len(agent_callbacks[agent_callbacks['CB Date'] == str(today)])
-            create_metric_card(today_callbacks, "Today's Activity", 0.1)
+            st.markdown(f'<div class="metric-value">{today_callbacks}</div>', unsafe_allow_html=True)
+            st.markdown('<div class="metric-label">Today\'s Activity</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
         with col3:
+            st.markdown('<div class="metric-container fade-in" style="animation-delay: 0.2s;">', unsafe_allow_html=True)
             avg_rating = "N/A"
             if total_callbacks > 0:
+                # Simple rating calculation based on CB type
                 ratings = {'cold': 1, 'warm': 2, 'hot': 3}
                 scores = [ratings.get(cb_type, 1) for cb_type in agent_callbacks['CB Type']]
                 avg_rating = round(sum(scores) / len(scores), 1) if scores else "N/A"
-            create_metric_card(avg_rating, "Lead Quality", 0.2)
+            st.markdown(f'<div class="metric-value">{avg_rating}</div>', unsafe_allow_html=True)
+            st.markdown('<div class="metric-label">Lead Quality</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
         
-        create_subheader("Submit New Callback")
+        # Submit New Callback - Enhanced Form
+        st.markdown('<div class="subheader slide-in-up">Submit New Callback</div>', unsafe_allow_html=True)
         
         with st.form(key="callback_form", clear_on_submit=True):
-            col1, col2 = st.columns(2)
+            st.markdown('<div class="elite-card slide-in-up">', unsafe_allow_html=True)
+            
+            # Enhanced form layout
+            col1, col2 = st.columns([1, 1])
             
             with col1:
-                st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem; font-family: Inter, sans-serif;">Client Information</h4>')
+                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #00d4ff; margin: 0;">Client Information</h4></div>', unsafe_allow_html=True)
                 full_name = st.text_input("Full Name *", placeholder="Enter client full name")
                 address = st.text_input("Address", placeholder="Client address")
                 mcn = st.text_input("MCN", placeholder="Medical Coverage Number")
@@ -500,14 +637,15 @@ elif st.session_state.page == 'agent_dashboard':
                 number = st.text_input("Phone Number", placeholder="Contact number")
             
             with col2:
-                st.markdown('<h4 style="color: #ff6b6b; margin-bottom: 1.5rem; font-family: Inter, sans-serif;">Callback Details</h4>')
+                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #ff6b6b; margin: 0;">Callback Details</h4></div>', unsafe_allow_html=True)
                 cb_date = st.date_input("Callback Date *", help="Preferred callback date")
                 cb_timing = st.text_input("Preferred Time", placeholder="e.g., 2:00 PM")
                 cb_type = st.selectbox("Lead Temperature", ["cold", "warm", "hot"], 
                                      format_func=lambda x: x.capitalize(),
                                      help="Cold: New lead, Warm: Interested, Hot: Ready to proceed")
             
-            col1, col2 = st.columns(2)
+            # Notes sections
+            col1, col2 = st.columns([1, 1])
             with col1:
                 notes = st.text_area("Additional Notes", height=100, 
                                    placeholder="Any additional information about the client...")
@@ -515,10 +653,14 @@ elif st.session_state.page == 'agent_dashboard':
                 medical_conditions = st.text_area("Medical Conditions", height=100,
                                                 placeholder="List any relevant medical conditions...")
             
-            col_submit, _ = st.columns([1, 3])
-            with col_submit:
-                submit = st.form_submit_button("Submit Callback")
+            # Submit section
+            st.markdown('<div style="text-align: center; margin-top: 2rem;">', unsafe_allow_html=True)
+            submit = st.form_submit_button("Submit Callback")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
         
+        # Handle form submission
         if submit and full_name and cb_date:
             new_row = [
                 st.session_state.agent_name, full_name, address, mcn, str(dob), 
@@ -531,52 +673,62 @@ elif st.session_state.page == 'agent_dashboard':
         elif submit:
             st.warning("Please fill in required fields (Full Name & Callback Date)")
         
-        create_subheader("Your Callbacks")
+        # Enhanced Callbacks Display
+        st.markdown('<div class="subheader slide-in-left">Your Callbacks</div>', unsafe_allow_html=True)
         
         if not agent_callbacks.empty:
             for idx, row in agent_callbacks.iterrows():
-                create_callback_card(row, idx)
+                status_class = f"status-{row['CB Type']}"
+                with st.container():
+                    st.markdown(f'''
+                    <div class="callback-card fade-in" style="animation-delay: {idx * 0.1}s;">
+                        <div class="callback-header">
+                            <strong>{row["Full Name"]}</strong>
+                            <span class="status-badge {status_class}">{row["CB Type"].capitalize()}</span>
+                        </div>
+                        <div class="callback-meta">
+                            Address: {row["Address"]} | Phone: {row["Number"]} | MCN: {row["MCN"]}
+                        </div>
+                        <div class="callback-meta">
+                            DOB: {row["DOB"]} | Date: {row["CB Date"]} | Time: {row["CB Timing"]}
+                        </div>
+                        <div class="callback-notes">
+                            Notes: {row["Notes"][:150]}{"..." if len(row["Notes"]) > 150 else ""}
+                        </div>
+                        <div class="callback-notes">
+                            Medical: {row["Medical Conditions"][:150]}{"..." if len(row["Medical Conditions"]) > 150 else ""}
+                        </div>
+                    </div>
+                    ''', unsafe_allow_html=True)
         else:
-            create_card("Ready to Get Started", """
-            <div style="text-align: center; padding: 3rem;">
-                <h3 style="color: #ffd93d; margin-bottom: 1rem; font-family: Inter, sans-serif; font-size: 1.8rem;">
-                    Ready to Get Started
-                </h3>
-                <p style="color: rgba(255,255,255,0.7); font-family: Inter, sans-serif;">
-                    No callbacks yet. Submit your first callback above!
-                </p>
-            </div>
-            """, "elite-card fade-in")
+            st.markdown('<div class="elite-card fade-in" style="text-align: center; padding: 3rem;">', unsafe_allow_html=True)
+            st.markdown('<h3 style="color: #ffd93d; margin-bottom: 1rem;">Ready to Get Started</h3>', unsafe_allow_html=True)
+            st.markdown('<p style="color: rgba(255,255,255,0.7);">No callbacks yet. Submit your first callback above!</p>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-# Admin Page
+# Enhanced Admin Page
 elif st.session_state.page == 'admin':
-    create_hero_header("Admin Console")
+    st.markdown('<div class="hero-header slide-in-up">Admin Console</div>', unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        create_card("Admin Authentication", """
-        <div style="text-align: center;">
-            <h3 style="color: #00d4ff; margin-bottom: 2rem; font-family: Playfair Display, serif; font-size: 1.8rem;">
-                Admin Access
-            </h3>
-            <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem; font-family: Inter, sans-serif;">
-                Enter your admin access code
-            </p>
-        </div>
-        """, "elite-card slide-in-up")
-        
+    # Enhanced admin authentication
+    auth_col1, auth_col2, auth_col3 = st.columns([1, 2, 1])
+    with auth_col2:
+        st.markdown('<div class="elite-card slide-in-up">', unsafe_allow_html=True)
         password = st.text_input("Admin Access Code", type="password", 
                                placeholder="Enter admin credentials",
                                help="Contact IT for access code")
         
-        if create_custom_button("Verify Access", key="admin_verify"):
+        if st.button("Verify Access", key="admin_verify"):
             if password == "admin1234":
                 st.session_state.admin_access = True
                 st.success("Admin Access Granted!")
                 st.rerun()
             else:
                 st.error("Access Denied. Invalid credentials.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
+    # Admin Dashboard Content
     if hasattr(st.session_state, 'admin_access') and st.session_state.admin_access:
         st.markdown('<div style="height: 2rem;"></div>', unsafe_allow_html=True)
         
@@ -587,7 +739,8 @@ elif st.session_state.page == 'admin':
         tab1, tab2 = st.tabs(["Analytics Dashboard", "Agent Management"])
         
         with tab1:
-            create_subheader("Performance Analytics")
+            st.markdown('<div class="subheader">Performance Analytics</div>', unsafe_allow_html=True)
+            st.markdown('<div class="elite-card">', unsafe_allow_html=True)
             
             callbacks_df = get_df(callbacks_sheet)
             if selected_agent == 'All Agents':
@@ -595,62 +748,75 @@ elif st.session_state.page == 'admin':
             else:
                 agent_filter = callbacks_df[callbacks_df['Agent Name'] == selected_agent]
             
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
             with col1:
-                create_metric_card(len(agent_filter), "Total Callbacks")
-            with col2:
-                today_count = len(agent_filter[agent_filter['CB Date'] == str(datetime.date.today())])
-                create_metric_card(today_count, "Today's Leads")
-            with col3:
-                hot_leads = len(agent_filter[agent_filter['CB Type'] == 'hot'])
-                create_metric_card(hot_leads, "Hot Leads")
-            with col4:
-                avg_response = round(len(agent_filter) / len(agents_df), 1) if agents_df.shape[0] > 0 else 0
-                create_metric_card(avg_response, "Avg/Agent")
+                st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+                st.markdown(f'<div class="metric-value">{len(agent_filter)}</div>', unsafe_allow_html=True)
+                st.markdown('<div class="metric-label">Total Callbacks</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             
-            create_subheader(f"{selected_agent}'s Callbacks")
+            with col2:
+                st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+                today_count = len(agent_filter[agent_filter['CB Date'] == str(datetime.date.today())])
+                st.markdown(f'<div class="metric-value">{today_count}</div>', unsafe_allow_html=True)
+                st.markdown('<div class="metric-label">Today\'s Leads</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col3:
+                st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+                hot_leads = len(agent_filter[agent_filter['CB Type'] == 'hot'])
+                st.markdown(f'<div class="metric-value">{hot_leads}</div>', unsafe_allow_html=True)
+                st.markdown('<div class="metric-label">Hot Leads</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col4:
+                st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+                avg_response = round(len(agent_filter) / len(agents_df), 1) if agents_df.shape[0] > 0 else 0
+                st.markdown(f'<div class="metric-value">{avg_response}</div>', unsafe_allow_html=True)
+                st.markdown('<div class="metric-label">Avg/Agent</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Enhanced Data Display
+            st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
             if not agent_filter.empty:
-                create_card("Callback Data", "", "elite-card")
+                st.markdown('<div class="elite-card">', unsafe_allow_html=True)
                 st.dataframe(agent_filter, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.info(f"No callbacks found for {selected_agent}")
         
         with tab2:
-            create_subheader("Agent Management")
+            st.markdown('<div class="subheader">Agent Management</div>', unsafe_allow_html=True)
+            st.markdown('<div class="elite-card">', unsafe_allow_html=True)
             
-            create_card("Current Agents", "", "elite-card")
-            st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem; font-family: Inter, sans-serif;">Current Agents</h4>', unsafe_allow_html=True)
-            
+            # Enhanced Agent Display
+            st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem;">Current Agents</h4>', unsafe_allow_html=True)
             if not agents_df.empty:
                 for idx, agent in agents_df.iterrows():
-                    st.markdown(f"""
-                    <div style="
-                        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%);
-                        border-left: 5px solid #00d4ff;
-                        border-radius: 16px;
-                        padding: 1.5rem;
-                        margin-bottom: 1rem;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        font-family: Inter, sans-serif;
-                    ">
-                        <div>
-                            <strong style="color: #ffffff;">{agent["Agent Name"]}</strong>
-                            <span style="color: rgba(255,255,255,0.6); margin-left: 1rem;">Code: {agent["Agent Code"]}</span>
+                    with st.container():
+                        st.markdown(f'''
+                        <div class="callback-card" style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #ffffff;">{agent["Agent Name"]}</strong>
+                                    <span style="color: rgba(255,255,255,0.6); margin-left: 1rem;">Code: {agent["Agent Code"]}</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="color: #4caf50; font-weight: 600;">ACTIVE</span>
+                                </div>
+                            </div>
                         </div>
-                        <div style="text-align: right;">
-                            <span style="color: #4caf50; font-weight: 600;">ACTIVE</span>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                        ''', unsafe_allow_html=True)
             else:
                 st.warning("No agents registered yet.")
             
-            st.markdown('<h4 style="color: #ff6b6b; margin: 2rem 0 1rem 0; font-family: Inter, sans-serif;">Add New Agent</h4>', unsafe_allow_html=True)
+            # Enhanced Agent Creation
+            st.markdown('<h4 style="color: #ff6b6b; margin: 2rem 0 1rem 0;">Add New Agent</h4>', unsafe_allow_html=True)
             
             with st.form(key="agent_form", clear_on_submit=True):
-                col1, col2 = st.columns(2)
+                col1, col2 = st.columns([1, 1])
                 with col1:
                     new_agent_name = st.text_input("Agent Name *", 
                                                  placeholder="Full name of new agent")
@@ -659,7 +825,7 @@ elif st.session_state.page == 'admin':
                                                  type="password",
                                                  placeholder="Generate unique code")
                 
-                col_btn1, col_btn2 = st.columns(2)
+                col_btn1, col_btn2 = st.columns([1, 1])
                 with col_btn1:
                     add_agent = st.form_submit_button("Add Agent")
                 with col_btn2:
@@ -674,36 +840,39 @@ elif st.session_state.page == 'admin':
                     st.rerun()
                 elif add_agent:
                     st.error("Please complete all required fields")
+            
+            st.markdown('</div>', unsafe_allow_html=True)
         
+        # Admin Controls
         st.markdown('<div style="text-align: center; margin-top: 3rem;">', unsafe_allow_html=True)
-        if create_custom_button("Logout Admin", key="admin_logout"):
+        if st.button("Logout Admin", key="admin_logout"):
             if hasattr(st.session_state, 'admin_access'):
                 del st.session_state.admin_access
             st.session_state.page = 'control_hub'
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
     
+    # Back to hub button
     col1, col2 = st.columns([3, 1])
     with col2:
-        if create_custom_button("Control Hub", key="admin_back_hub"):
+        if st.button("Control Hub", key="admin_back_hub"):
             st.session_state.page = 'control_hub'
             st.rerun()
 
 # Footer
 st.markdown('''
 <div style="
-    text-align: center !important; 
-    padding: 3rem 1rem 1rem 1rem !important; 
-    color: rgba(255,255,255,0.4) !important; 
-    font-size: 0.9rem !important;
-    border-top: 1px solid rgba(255,255,255,0.1) !important;
-    margin-top: 3rem !important;
-    font-family: Inter, sans-serif !important;
+    text-align: center; 
+    padding: 3rem 1rem 1rem 1rem; 
+    color: rgba(255,255,255,0.4); 
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 3rem;
 ">
-    <div style="margin-bottom: 1rem !important;">
-        <strong style="color: #ffffff !important;">Hunter Agents</strong> | Professional Management System
+    <div style="margin-bottom: 1rem;">
+        <strong>Hunter Agents</strong> | Professional Management System
     </div>
-    <div style="color: rgba(255,255,255,0.6) !important;">
+    <div>
         © 2025 Powered by Advanced Technology | All Rights Reserved
     </div>
 </div>
