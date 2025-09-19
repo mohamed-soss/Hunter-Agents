@@ -55,20 +55,25 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced Custom CSS - Fixed for PC Compatibility
+# BULLETPROOF CSS - Universal Selectors
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
     
-    /* Global Styles */
-    .main {
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-        font-family: 'Inter', sans-serif;
-        color: #ffffff;
+    /* Universal Reset */
+    * {
+        box-sizing: border-box;
     }
     
+    /* Global Styles */
     .stApp {
-        background: transparent;
+        background: transparent !important;
+    }
+    
+    .main {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+        font-family: 'Inter', sans-serif !important;
+        color: #ffffff !important;
     }
     
     /* Animated Background */
@@ -93,23 +98,23 @@ st.markdown("""
     
     /* Header Styles */
     .hero-header {
-        font-family: 'Playfair Display', serif;
-        font-size: 4.5rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #00d4ff 0%, #ffffff 50%, #ff6b6b 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-align: center;
-        margin-bottom: 3rem;
-        padding: 3rem 2rem;
-        position: relative;
-        animation: glow 3s ease-in-out infinite alternate;
-        text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        font-family: 'Playfair Display', serif !important;
+        font-size: 4.5rem !important;
+        font-weight: 900 !important;
+        background: linear-gradient(135deg, #00d4ff 0%, #ffffff 50%, #ff6b6b 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        text-align: center !important;
+        margin-bottom: 3rem !important;
+        padding: 3rem 2rem !important;
+        position: relative !important;
+        animation: glow 3s ease-in-out infinite alternate !important;
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.5) !important;
     }
     
     @media (max-width: 768px) {
-        .hero-header { font-size: 3rem; padding: 2rem 1rem; }
+        .hero-header { font-size: 3rem !important; padding: 2rem 1rem !important; }
     }
     
     @keyframes glow {
@@ -118,95 +123,72 @@ st.markdown("""
     }
     
     .subheader {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #ffffff 0%, #a8a8ff 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 2rem;
-        position: relative;
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        background: linear-gradient(135deg, #ffffff 0%, #a8a8ff 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 2rem !important;
+        position: relative !important;
     }
     
     .subheader::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 60px;
-        height: 4px;
-        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
-        border-radius: 2px;
+        content: '' !important;
+        position: absolute !important;
+        bottom: -10px !important;
+        left: 0 !important;
+        width: 60px !important;
+        height: 4px !important;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b) !important;
+        border-radius: 2px !important;
     }
     
-    /* Enhanced Cards */
-    .elite-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 24px;
-        padding: 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    /* Universal Card Styling */
+    [data-testid="column"] > div > div,
+    .block-container > div,
+    .stAlert,
+    .stTabs,
+    .stForm {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 24px !important;
+        padding: 2rem !important;
+        margin-bottom: 2rem !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
     }
     
-    .elite-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, #00d4ff, #ff6b6b, #ffd93d);
-        transform: scaleX(0);
-        transition: transform 0.4s ease;
-    }
-    
-    .elite-card:hover {
-        transform: translateY(-12px) scale(1.02);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        border-color: rgba(0, 212, 255, 0.3);
-    }
-    
-    .elite-card:hover::before {
-        transform: scaleX(1);
-    }
-    
-    .elite-card-content {
-        color: #ffffff;
-        font-weight: 500;
-        line-height: 1.6;
-    }
-    
-    /* Control Hub Cards */
+    /* Control Hub Cards - Specific */
     .control-card {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 3rem 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.4s ease;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 20px !important;
+        padding: 3rem 2rem !important;
+        text-align: center !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.4s ease !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+        margin: 1rem 0 !important;
     }
     
     .control-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: rotate 4s linear infinite;
-        pointer-events: none;
+        content: '' !important;
+        position: absolute !important;
+        top: -50% !important;
+        left: -50% !important;
+        width: 200% !important;
+        height: 200% !important;
+        background: conic-gradient(transparent, rgba(255, 255, 255, 0.1), transparent) !important;
+        animation: rotate 4s linear infinite !important;
+        pointer-events: none !important;
     }
     
     @keyframes rotate {
@@ -214,31 +196,36 @@ st.markdown("""
     }
     
     .control-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
-        border-color: #00d4ff;
+        transform: translateY(-8px) !important;
+        box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3) !important;
+        border-color: #00d4ff !important;
     }
     
     .control-card h3 {
-        font-family: 'Playfair Display', serif;
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #ffffff, #00d4ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 1rem;
+        font-family: 'Playfair Display', serif !important;
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        background: linear-gradient(135deg, #ffffff, #00d4ff) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 1rem !important;
+        color: transparent !important;
     }
     
-    /* FIXED BUTTON STYLING - Works on PC and Mobile */
-    button[kind="primary"], 
-    button[kind="secondary"], 
-    .stButton > button {
+    /* BULLETPROOF BUTTON STYLING */
+    button, 
+    [role="button"], 
+    input[type="submit"], 
+    .stButton button,
+    div[role="button"] button,
+    .css-1omf2se button,
+    .css-1d391kg button {
         background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
         color: #ffffff !important;
         border: none !important;
         border-radius: 16px !important;
-        padding: 0.8rem 2rem !important;
+        padding: 12px 24px !important;
         font-weight: 700 !important;
         font-size: 1rem !important;
         text-transform: uppercase !important;
@@ -249,61 +236,40 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
         cursor: pointer !important;
         width: 100% !important;
-        margin: 0.5rem 0 !important;
-        min-height: 44px !important;
+        margin: 8px 0 !important;
+        min-height: 48px !important;
+        display: block !important;
+        text-align: center !important;
     }
     
-    button[kind="primary"]:hover, 
-    button[kind="secondary"]:hover, 
-    .stButton > button:hover {
+    /* All possible button hover states */
+    button:hover, 
+    [role="button"]:hover, 
+    input[type="submit"]:hover,
+    .stButton button:hover,
+    div[role="button"] button:hover,
+    .css-1omf2se button:hover,
+    .css-1d391kg button:hover {
         transform: translateY(-3px) !important;
         box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
         background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
     }
     
-    button[kind="primary"]:active, 
-    button[kind="secondary"]:active, 
-    .stButton > button:active {
+    button:active, 
+    [role="button"]:active, 
+    input[type="submit"]:active,
+    .stButton button:active,
+    div[role="button"] button:active,
+    .css-1omf2se button:active,
+    .css-1d391kg button:active {
         transform: translateY(-1px) !important;
         box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3) !important;
     }
     
-    /* Form Submit Buttons - Enhanced Targeting */
-    div.element-container div[role="button"],
-    .stFormSubmitButton button,
-    div[data-baseweb="button"] {
-        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 16px !important;
-        padding: 1rem 2rem !important;
-        font-weight: 700 !important;
-        font-size: 1.1rem !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1px !important;
-        position: relative !important;
-        overflow: hidden !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
-        cursor: pointer !important;
-        width: 100% !important;
-        margin-top: 1rem !important;
-        min-height: 44px !important;
-    }
-    
-    div.element-container div[role="button"]:hover,
-    .stFormSubmitButton button:hover,
-    div[data-baseweb="button"]:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
-        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
-    }
-    
-    /* Form Elements */
-    .stTextInput > div > div > input,
-    .stSelectbox > div > div > select,
-    .stDateInput > div > div > input,
-    .stTextArea > div > div > textarea {
+    /* Form Elements - Universal */
+    input, 
+    select, 
+    textarea {
         background: rgba(255, 255, 255, 0.1) !important;
         border: 2px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 12px !important;
@@ -315,153 +281,163 @@ st.markdown("""
         transition: all 0.3s ease !important;
         width: 100% !important;
         margin-bottom: 1rem !important;
-        box-sizing: border-box !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 1rem !important;
     }
     
-    .stTextInput > div > div > input:focus,
-    .stSelectbox > div > div > select:focus,
-    .stDateInput > div > div > input:focus,
-    .stTextArea > div > div > textarea:focus {
+    input:focus, 
+    select:focus, 
+    textarea:focus {
         border-color: #00d4ff !important;
         box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1) !important;
         background: rgba(255, 255, 255, 0.15) !important;
         outline: none !important;
     }
     
-    .stTextInput > div > div > input::placeholder,
-    .stTextArea > div > div > textarea::placeholder {
+    input::placeholder, 
+    textarea::placeholder {
         color: rgba(255, 255, 255, 0.6) !important;
     }
     
     /* Selectbox dropdown */
-    .stSelectbox div[role="listbox"] {
+    [role="listbox"], 
+    .rc-virtual-list {
         background: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 12px !important;
         color: #ffffff !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Sidebar Enhancement */
-    section[data-testid="stSidebar"] {
+    /* Sidebar - Universal */
+    section[data-testid="stSidebar"], 
+    .css-1d391kg {
         background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
         border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     
-    /* DataFrame Enhancement */
-    .stDataFrame {
+    /* DataFrame - Universal */
+    .dataframe, 
+    table {
         background: rgba(255, 255, 255, 0.05) !important;
         border-radius: 16px !important;
         overflow: hidden !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-    
-    .stDataFrame table {
         color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
     }
     
-    .stDataFrame th {
+    .dataframe th, 
+    table th {
         background: rgba(0, 212, 255, 0.2) !important;
         color: #ffffff !important;
         border-color: rgba(255, 255, 255, 0.1) !important;
+        font-weight: 600 !important;
+        padding: 12px 16px !important;
     }
     
-    .stDataFrame td {
+    .dataframe td, 
+    table td {
         border-color: rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
+        padding: 12px 16px !important;
     }
     
     /* Metric Cards */
     .metric-container {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 2rem;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border-radius: 20px !important;
+        padding: 2rem !important;
+        text-align: center !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+        transition: all 0.3s ease !important;
+        margin: 1rem 0 !important;
     }
     
     .metric-container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
+        transform: translateY(-5px) !important;
+        box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2) !important;
     }
     
     .metric-value {
-        font-size: 3rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
+        font-size: 3rem !important;
+        font-weight: 900 !important;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 0.5rem !important;
+        color: transparent !important;
     }
     
     .metric-label {
-        font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 500;
+        font-size: 1.1rem !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-weight: 500 !important;
     }
     
     /* Callback Cards */
     .callback-card {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%);
-        border-left: 5px solid #00d4ff;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%) !important;
+        border-left: 5px solid #00d4ff !important;
+        border-radius: 16px !important;
+        padding: 1.5rem !important;
+        margin-bottom: 1rem !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
     }
     
     .callback-card:hover {
-        transform: translateX(8px);
-        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2);
-        border-left-color: #ff6b6b;
+        transform: translateX(8px) !important;
+        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2) !important;
+        border-left-color: #ff6b6b !important;
     }
     
     .callback-header {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 0.8rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        margin-bottom: 0.8rem !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
     }
     
     .callback-meta {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.7);
-        margin-bottom: 0.5rem;
+        font-size: 0.9rem !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        margin-bottom: 0.5rem !important;
     }
     
     .callback-notes {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.4;
-        max-height: 60px;
-        overflow: hidden;
+        font-size: 0.85rem !important;
+        color: rgba(255, 255, 255, 0.6) !important;
+        line-height: 1.4 !important;
+        max-height: 60px !important;
+        overflow: hidden !important;
     }
     
     /* Status Badges */
     .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        padding: 4px 12px !important;
+        border-radius: 20px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        display: inline-block !important;
     }
     
-    .status-cold { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 107, 107, 0.3); }
-    .status-warm { background: rgba(255, 217, 61, 0.2); color: #ffd93d; border: 1px solid rgba(255, 217, 61, 0.3); }
-    .status-hot { background: rgba(76, 175, 80, 0.2); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); }
+    .status-cold { background: rgba(255, 107, 107, 0.2) !important; color: #ff6b6b !important; border: 1px solid rgba(255, 107, 107, 0.3) !important; }
+    .status-warm { background: rgba(255, 217, 61, 0.2) !important; color: #ffd93d !important; border: 1px solid rgba(255, 217, 61, 0.3) !important; }
+    .status-hot { background: rgba(76, 175, 80, 0.2) !important; color: #4caf50 !important; border: 1px solid rgba(76, 175, 80, 0.3) !important; }
     
     /* Animations */
     @keyframes slideInUp {
@@ -479,12 +455,12 @@ st.markdown("""
         to { transform: translateX(0); opacity: 1; }
     }
     
-    .slide-in-up { animation: slideInUp 0.8s ease-out; }
-    .fade-in { animation: fadeIn 1s ease-out; }
-    .slide-in-left { animation: slideInLeft 0.8s ease-out; }
+    .slide-in-up { animation: slideInUp 0.8s ease-out !important; }
+    .fade-in { animation: fadeIn 1s ease-out !important; }
+    .slide-in-left { animation: slideInLeft 0.8s ease-out !important; }
     
     /* Success/Error Messages */
-    .stSuccess, .stError, .stWarning, .stInfo {
+    div[data-testid="stAlert"] {
         border-radius: 12px !important;
         border-left: 4px solid #00d4ff !important;
         background: rgba(0, 212, 255, 0.1) !important;
@@ -492,31 +468,36 @@ st.markdown("""
         font-weight: 500 !important;
         padding: 1rem !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        margin: 1rem 0 !important;
     }
     
-    .stError { border-left-color: #ff6b6b !important; background: rgba(255, 107, 107, 0.1) !important; }
+    div[data-testid="stAlert"] [data-testid="stAlertMessage"] {
+        color: #ffffff !important;
+    }
     
-    /* Tabs Enhancement */
-    .stTabs [data-baseweb="tab-list"] {
+    /* Tabs - Universal */
+    div[data-testid="stTab"] {
         background: rgba(255, 255, 255, 0.05) !important;
         border-radius: 12px !important;
         padding: 4px !important;
+        margin: 1rem 0 !important;
     }
     
-    .stTabs [data-baseweb="tab"] {
+    div[data-testid="stTab"] button {
         background: transparent !important;
         border-radius: 8px !important;
         color: rgba(255, 255, 255, 0.7) !important;
         margin: 2px !important;
-        padding: 8px 16px !important;
+        padding: 12px 24px !important;
+        border: none !important;
     }
     
-    .stTabs [data-baseweb="tab"]:hover {
+    div[data-testid="stTab"] button:hover {
         color: #00d4ff !important;
         background: rgba(0, 212, 255, 0.1) !important;
     }
     
-    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+    div[data-testid="stTab"] button[aria-selected="true"] {
         color: #00d4ff !important;
         background: rgba(0, 212, 255, 0.2) !important;
         font-weight: 600 !important;
@@ -543,15 +524,15 @@ with st.spinner('Initializing Hunter Agents Portal...'):
 if st.session_state.page == 'control_hub':
     # Hero Section
     st.markdown('<div class="hero-header slide-in-up">Hunter Agents</div>', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem;">Professional insurance management system</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem; font-family: Inter, sans-serif;">Professional insurance management system</div>', unsafe_allow_html=True)
     
     # Enhanced Control Cards
     col1, col2 = st.columns([1, 1])
     
     with col1:
         st.markdown('<div class="control-card fade-in">', unsafe_allow_html=True)
-        st.markdown('<h3>Agent Portal</h3>', unsafe_allow_html=True)
-        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Access your personalized dashboard, submit callbacks, and track performance metrics</p>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: transparent !important; background: linear-gradient(135deg, #ffffff, #00d4ff) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important; font-family: Playfair Display, serif !important; font-size: 2rem !important; font-weight: 700 !important; margin-bottom: 1rem !important;">Agent Portal</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-family: Inter, sans-serif;">Access your personalized dashboard, submit callbacks, and track performance metrics</p>', unsafe_allow_html=True)
         if st.button("Enter Portal", key="user_portal"):
             st.session_state.page = 'login'
             st.rerun()
@@ -559,8 +540,8 @@ if st.session_state.page == 'control_hub':
     
     with col2:
         st.markdown('<div class="control-card fade-in" style="animation-delay: 0.2s;">', unsafe_allow_html=True)
-        st.markdown('<h3>Admin Console</h3>', unsafe_allow_html=True)
-        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Complete system control, agent management, and performance analytics</p>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: transparent !important; background: linear-gradient(135deg, #ffffff, #00d4ff) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important; font-family: Playfair Display, serif !important; font-size: 2rem !important; font-weight: 700 !important; margin-bottom: 1rem !important;">Admin Console</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-family: Inter, sans-serif;">Complete system control, agent management, and performance analytics</p>', unsafe_allow_html=True)
         if st.button("Admin Access", key="admin_dashboard"):
             st.session_state.page = 'admin'
             st.rerun()
@@ -575,8 +556,8 @@ elif st.session_state.page == 'login':
     with col2:
         st.markdown('<div class="elite-card slide-in-up">', unsafe_allow_html=True)
         st.markdown('<div style="text-align: center; margin-bottom: 2rem;">', unsafe_allow_html=True)
-        st.markdown('<h3 style="color: #00d4ff; margin-bottom: 0.5rem;">Agent Authentication</h3>', unsafe_allow_html=True)
-        st.markdown('<p style="color: rgba(255,255,255,0.7);">Please verify your identity to access the portal</p>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #00d4ff !important; margin-bottom: 0.5rem !important; font-family: Playfair Display, serif !important;">Agent Authentication</h3>', unsafe_allow_html=True)
+        st.markdown('<p style="color: rgba(255,255,255,0.7) !important; font-family: Inter, sans-serif !important;">Please verify your identity to access the portal</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         agents_df = get_df(agents_sheet)
@@ -616,7 +597,7 @@ elif st.session_state.page == 'login':
 elif st.session_state.page == 'agent_dashboard':
     # Enhanced Header with Agent Info
     st.markdown(
-        f'<div class="hero-header slide-in-up">Welcome, <span style="color: #00d4ff;">{st.session_state.agent_name}</span></div>', 
+        f'<div class="hero-header slide-in-up">Welcome, <span style="color: #00d4ff !important;">{st.session_state.agent_name}</span></div>', 
         unsafe_allow_html=True
     )
     
@@ -642,7 +623,7 @@ elif st.session_state.page == 'agent_dashboard':
             st.session_state.page = 'control_hub'
             st.rerun()
         
-        st.markdown('<div style="padding-top: 2rem; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.8rem;">', unsafe_allow_html=True)
+        st.markdown('<div style="padding-top: 2rem; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-family: Inter, sans-serif;">', unsafe_allow_html=True)
         st.markdown('Powered by Advanced Technology', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -694,7 +675,7 @@ elif st.session_state.page == 'agent_dashboard':
             col1, col2 = st.columns([1, 1])
             
             with col1:
-                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #00d4ff; margin: 0;">Client Information</h4></div>', unsafe_allow_html=True)
+                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #00d4ff !important; margin: 0 !important; font-family: Inter, sans-serif !important;">Client Information</h4></div>', unsafe_allow_html=True)
                 full_name = st.text_input("Full Name *", placeholder="Enter client full name")
                 address = st.text_input("Address", placeholder="Client address")
                 mcn = st.text_input("MCN", placeholder="Medical Coverage Number")
@@ -702,7 +683,7 @@ elif st.session_state.page == 'agent_dashboard':
                 number = st.text_input("Phone Number", placeholder="Contact number")
             
             with col2:
-                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #ff6b6b; margin: 0;">Callback Details</h4></div>', unsafe_allow_html=True)
+                st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #ff6b6b !important; margin: 0 !important; font-family: Inter, sans-serif !important;">Callback Details</h4></div>', unsafe_allow_html=True)
                 cb_date = st.date_input("Callback Date *", help="Preferred callback date")
                 cb_timing = st.text_input("Preferred Time", placeholder="e.g., 2:00 PM")
                 cb_type = st.selectbox("Lead Temperature", ["cold", "warm", "hot"], 
@@ -748,27 +729,27 @@ elif st.session_state.page == 'agent_dashboard':
                     st.markdown(f'''
                     <div class="callback-card fade-in" style="animation-delay: {idx * 0.1}s;">
                         <div class="callback-header">
-                            <strong>{row["Full Name"]}</strong>
+                            <strong style="color: #ffffff !important;">{row["Full Name"]}</strong>
                             <span class="status-badge {status_class}">{row["CB Type"].capitalize()}</span>
                         </div>
-                        <div class="callback-meta">
+                        <div class="callback-meta" style="color: rgba(255, 255, 255, 0.7) !important;">
                             Address: {row["Address"]} | Phone: {row["Number"]} | MCN: {row["MCN"]}
                         </div>
-                        <div class="callback-meta">
+                        <div class="callback-meta" style="color: rgba(255, 255, 255, 0.7) !important;">
                             DOB: {row["DOB"]} | Date: {row["CB Date"]} | Time: {row["CB Timing"]}
                         </div>
-                        <div class="callback-notes">
+                        <div class="callback-notes" style="color: rgba(255, 255, 255, 0.6) !important;">
                             Notes: {row["Notes"][:150]}{"..." if len(row["Notes"]) > 150 else ""}
                         </div>
-                        <div class="callback-notes">
+                        <div class="callback-notes" style="color: rgba(255, 255, 255, 0.6) !important;">
                             Medical: {row["Medical Conditions"][:150]}{"..." if len(row["Medical Conditions"]) > 150 else ""}
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
         else:
             st.markdown('<div class="elite-card fade-in" style="text-align: center; padding: 3rem;">', unsafe_allow_html=True)
-            st.markdown('<h3 style="color: #ffd93d; margin-bottom: 1rem;">Ready to Get Started</h3>', unsafe_allow_html=True)
-            st.markdown('<p style="color: rgba(255,255,255,0.7);">No callbacks yet. Submit your first callback above!</p>', unsafe_allow_html=True)
+            st.markdown('<h3 style="color: #ffd93d !important; margin-bottom: 1rem !important; font-family: Inter, sans-serif !important;">Ready to Get Started</h3>', unsafe_allow_html=True)
+            st.markdown('<p style="color: rgba(255,255,255,0.7) !important; font-family: Inter, sans-serif !important;">No callbacks yet. Submit your first callback above!</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
 # Enhanced Admin Page
@@ -857,19 +838,19 @@ elif st.session_state.page == 'admin':
             st.markdown('<div class="elite-card">', unsafe_allow_html=True)
             
             # Enhanced Agent Display
-            st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem;">Current Agents</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color: #00d4ff !important; margin-bottom: 1.5rem !important; font-family: Inter, sans-serif !important;">Current Agents</h4>', unsafe_allow_html=True)
             if not agents_df.empty:
                 for idx, agent in agents_df.iterrows():
                     with st.container():
                         st.markdown(f'''
-                        <div class="callback-card" style="margin-bottom: 1rem;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="callback-card" style="margin-bottom: 1rem !important;">
+                            <div style="display: flex !important; justify-content: space-between !important; align-items: center !important;">
                                 <div>
-                                    <strong style="color: #ffffff;">{agent["Agent Name"]}</strong>
-                                    <span style="color: rgba(255,255,255,0.6); margin-left: 1rem;">Code: {agent["Agent Code"]}</span>
+                                    <strong style="color: #ffffff !important;">{agent["Agent Name"]}</strong>
+                                    <span style="color: rgba(255,255,255,0.6) !important; margin-left: 1rem !important; font-family: Inter, sans-serif !important;">Code: {agent["Agent Code"]}</span>
                                 </div>
-                                <div style="text-align: right;">
-                                    <span style="color: #4caf50; font-weight: 600;">ACTIVE</span>
+                                <div style="text-align: right !important;">
+                                    <span style="color: #4caf50 !important; font-weight: 600 !important; font-family: Inter, sans-serif !important;">ACTIVE</span>
                                 </div>
                             </div>
                         </div>
@@ -878,7 +859,7 @@ elif st.session_state.page == 'admin':
                 st.warning("No agents registered yet.")
             
             # Enhanced Agent Creation
-            st.markdown('<h4 style="color: #ff6b6b; margin: 2rem 0 1rem 0;">Add New Agent</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color: #ff6b6b !important; margin: 2rem 0 1rem 0 !important; font-family: Inter, sans-serif !important;">Add New Agent</h4>', unsafe_allow_html=True)
             
             with st.form(key="agent_form", clear_on_submit=True):
                 col1, col2 = st.columns([1, 1])
@@ -927,17 +908,18 @@ elif st.session_state.page == 'admin':
 # Footer
 st.markdown('''
 <div style="
-    text-align: center; 
-    padding: 3rem 1rem 1rem 1rem; 
-    color: rgba(255,255,255,0.4); 
-    font-size: 0.9rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    margin-top: 3rem;
+    text-align: center !important; 
+    padding: 3rem 1rem 1rem 1rem !important; 
+    color: rgba(255,255,255,0.4) !important; 
+    font-size: 0.9rem !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+    margin-top: 3rem !important;
+    font-family: Inter, sans-serif !important;
 ">
-    <div style="margin-bottom: 1rem;">
-        <strong>Hunter Agents</strong> | Professional Management System
+    <div style="margin-bottom: 1rem !important;">
+        <strong style="color: #ffffff !important;">Hunter Agents</strong> | Professional Management System
     </div>
-    <div>
+    <div style="color: rgba(255,255,255,0.6) !important;">
         © 2025 Powered by Advanced Technology | All Rights Reserved
     </div>
 </div>
