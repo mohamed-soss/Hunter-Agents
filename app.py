@@ -50,10 +50,9 @@ def get_df(worksheet):
 
 # Streamlit config
 st.set_page_config(
-    page_title="Hunter International - Elite Agent Portal",
+    page_title="Hunter Agents - Professional Portal",
     layout="wide",
-    initial_sidebar_state="expanded",
-    page_icon="🦅"
+    initial_sidebar_state="expanded"
 )
 
 # Enhanced Custom CSS - Professional & Stunning Design
@@ -460,17 +459,17 @@ if 'menu' not in st.session_state:
     st.session_state.menu = "Callbacks"
 
 # Loading Animation
-with st.spinner('Initializing Hunter Elite Portal...'):
+with st.spinner('Initializing Hunter Agents Portal...'):
     time.sleep(0.5)
 
 # Control Hub Page - Enhanced
 if st.session_state.page == 'control_hub':
     # Hero Section
-    st.markdown('<div class="hero-header slide-in-up">Hunter Elite Portal</div>', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem;">Welcome to the future of insurance excellence</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-header slide-in-up">Hunter Agents</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem;">Professional insurance management system</div>', unsafe_allow_html=True)
     
-    # Enhanced Control Cards
-    col1, col2 = st.columns(2, gap="2rem")
+    # Enhanced Control Cards - Fixed gap parameter
+    col1, col2 = st.columns([1, 1])
     
     with col1:
         st.markdown('<div class="control-card fade-in">', unsafe_allow_html=True)
@@ -514,7 +513,7 @@ elif st.session_state.page == 'login':
         selected_agent = st.selectbox("Select Your Name", agent_names, help="Choose your registered name")
         agent_code = st.text_input("Enter Your Access Code", type="password", help="Your unique agent code")
         
-        col_btn1, col_btn2 = st.columns(2)
+        col_btn1, col_btn2 = st.columns([1, 1])
         with col_btn1:
             if st.button("Login", key="login_submit", help="Authenticate and access portal"):
                 matching_row = agents_df[
@@ -524,7 +523,7 @@ elif st.session_state.page == 'login':
                 if not matching_row.empty:
                     st.session_state.agent_name = selected_agent
                     st.session_state.page = 'agent_dashboard'
-                    st.success("Welcome back, Elite Agent!")
+                    st.success("Welcome back, Agent!")
                     st.rerun()
                 else:
                     st.error("Invalid credentials. Please try again.")
@@ -547,7 +546,7 @@ elif st.session_state.page == 'agent_dashboard':
     # Enhanced Sidebar
     with st.sidebar:
         st.markdown('<div style="text-align: center; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">', unsafe_allow_html=True)
-        st.markdown('<h3 style="color: #00d4ff; margin: 0;">Elite Agent Portal</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #00d4ff; margin: 0;">Hunter Agents Portal</h3>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('<div style="padding: 1rem; text-align: center;">', unsafe_allow_html=True)
@@ -571,7 +570,7 @@ elif st.session_state.page == 'agent_dashboard':
             st.rerun()
         
         st.markdown('<div style="padding-top: 2rem; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.8rem;">', unsafe_allow_html=True)
-        st.markdown('Powered by xAI Technology', unsafe_allow_html=True)
+        st.markdown('Powered by Advanced Technology', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     menu = st.session_state.menu
@@ -585,7 +584,7 @@ elif st.session_state.page == 'agent_dashboard':
         agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == st.session_state.agent_name]
         total_callbacks = len(agent_callbacks)
         
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             st.markdown('<div class="metric-container fade-in">', unsafe_allow_html=True)
             st.markdown(f'<div class="metric-value">{total_callbacks}</div>', unsafe_allow_html=True)
@@ -613,13 +612,13 @@ elif st.session_state.page == 'agent_dashboard':
             st.markdown('</div>', unsafe_allow_html=True)
         
         # Submit New Callback - Enhanced Form
-        st.markdown('<div class="subheader slide-in-up">Submit Elite Callback</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subheader slide-in-up">Submit New Callback</div>', unsafe_allow_html=True)
         
-        with st.form(key="elite_callback_form", clear_on_submit=True):
+        with st.form(key="callback_form", clear_on_submit=True):
             st.markdown('<div class="elite-card slide-in-up">', unsafe_allow_html=True)
             
             # Enhanced form layout
-            col1, col2 = st.columns(2, gap="1rem")
+            col1, col2 = st.columns([1, 1])
             
             with col1:
                 st.markdown('<div style="margin-bottom: 1.5rem;"><h4 style="color: #00d4ff; margin: 0;">Client Information</h4></div>', unsafe_allow_html=True)
@@ -638,7 +637,7 @@ elif st.session_state.page == 'agent_dashboard':
                                      help="Cold: New lead, Warm: Interested, Hot: Ready to proceed")
             
             # Notes sections
-            col1, col2 = st.columns(2, gap="1rem")
+            col1, col2 = st.columns([1, 1])
             with col1:
                 notes = st.text_area("Additional Notes", height=100, 
                                    placeholder="Any additional information about the client...")
@@ -648,7 +647,7 @@ elif st.session_state.page == 'agent_dashboard':
             
             # Submit section
             st.markdown('<div style="text-align: center; margin-top: 2rem;">', unsafe_allow_html=True)
-            submit = st.form_submit_button("Submit Elite Callback", use_container_width=True)
+            submit = st.form_submit_button("Submit Callback", use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
@@ -660,14 +659,14 @@ elif st.session_state.page == 'agent_dashboard':
                 number, notes, medical_conditions, str(cb_date), cb_timing, cb_type
             ]
             callbacks_sheet.append_row(new_row)
-            st.success(f"Elite callback submitted successfully for {full_name}!")
+            st.success(f"Callback submitted successfully for {full_name}!")
             st.balloons()
             st.rerun()
         elif submit:
             st.warning("Please fill in required fields (Full Name & Callback Date)")
         
         # Enhanced Callbacks Display
-        st.markdown('<div class="subheader slide-in-left">Your Elite Callbacks</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subheader slide-in-left">Your Callbacks</div>', unsafe_allow_html=True)
         
         if not agent_callbacks.empty:
             for idx, row in agent_callbacks.iterrows():
@@ -695,13 +694,13 @@ elif st.session_state.page == 'agent_dashboard':
                     ''', unsafe_allow_html=True)
         else:
             st.markdown('<div class="elite-card fade-in" style="text-align: center; padding: 3rem;">', unsafe_allow_html=True)
-            st.markdown('<h3 style="color: #ffd93d; margin-bottom: 1rem;">Ready to Make Impact</h3>', unsafe_allow_html=True)
-            st.markdown('<p style="color: rgba(255,255,255,0.7);">No callbacks yet. Submit your first elite callback above!</p>', unsafe_allow_html=True)
+            st.markdown('<h3 style="color: #ffd93d; margin-bottom: 1rem;">Ready to Get Started</h3>', unsafe_allow_html=True)
+            st.markdown('<p style="color: rgba(255,255,255,0.7);">No callbacks yet. Submit your first callback above!</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
 # Enhanced Admin Page
 elif st.session_state.page == 'admin':
-    st.markdown('<div class="hero-header slide-in-up">Elite Admin Console</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-header slide-in-up">Admin Console</div>', unsafe_allow_html=True)
     
     # Enhanced admin authentication
     auth_col1, auth_col2, auth_col3 = st.columns([1, 2, 1])
@@ -714,7 +713,7 @@ elif st.session_state.page == 'admin':
         if st.button("Verify Access", key="admin_verify", use_container_width=True):
             if password == "admin1234":
                 st.session_state.admin_access = True
-                st.success("Elite Admin Access Granted!")
+                st.success("Admin Access Granted!")
                 st.rerun()
             else:
                 st.error("Access Denied. Invalid credentials.")
@@ -726,10 +725,10 @@ elif st.session_state.page == 'admin':
         st.markdown('<div style="height: 2rem;"></div>', unsafe_allow_html=True)
         
         agents_df = get_df(agents_sheet)
-        selected_agent = st.selectbox("Select Elite Agent", 
+        selected_agent = st.selectbox("Select Agent", 
                                     ['All Agents'] + agents_df['Agent Name'].tolist())
         
-        tab1, tab2 = st.tabs(["Analytics Dashboard", "Elite Agent Management"])
+        tab1, tab2 = st.tabs(["Analytics Dashboard", "Agent Management"])
         
         with tab1:
             st.markdown('<div class="subheader">Performance Analytics</div>', unsafe_allow_html=True)
@@ -741,7 +740,7 @@ elif st.session_state.page == 'admin':
             else:
                 agent_filter = callbacks_df[callbacks_df['Agent Name'] == selected_agent]
             
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
             with col1:
                 st.markdown('<div class="metric-container">', unsafe_allow_html=True)
                 st.markdown(f'<div class="metric-value">{len(agent_filter)}</div>', unsafe_allow_html=True)
@@ -772,7 +771,7 @@ elif st.session_state.page == 'admin':
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Enhanced Data Display
-            st.markdown(f'<div class="subheader">{selected_agent}\'s Elite Callbacks</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
             if not agent_filter.empty:
                 st.markdown('<div class="elite-card">', unsafe_allow_html=True)
                 st.dataframe(agent_filter, use_container_width=True, hide_index=True)
@@ -781,11 +780,11 @@ elif st.session_state.page == 'admin':
                 st.info(f"No callbacks found for {selected_agent}")
         
         with tab2:
-            st.markdown('<div class="subheader">Elite Agent Management</div>', unsafe_allow_html=True)
+            st.markdown('<div class="subheader">Agent Management</div>', unsafe_allow_html=True)
             st.markdown('<div class="elite-card">', unsafe_allow_html=True)
             
             # Enhanced Agent Display
-            st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem;">Current Elite Agents</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color: #00d4ff; margin-bottom: 1.5rem;">Current Agents</h4>', unsafe_allow_html=True)
             if not agents_df.empty:
                 for idx, agent in agents_df.iterrows():
                     with st.container():
@@ -806,21 +805,21 @@ elif st.session_state.page == 'admin':
                 st.warning("No agents registered yet.")
             
             # Enhanced Agent Creation
-            st.markdown('<h4 style="color: #ff6b6b; margin: 2rem 0 1rem 0;">Onboard New Elite Agent</h4>', unsafe_allow_html=True)
+            st.markdown('<h4 style="color: #ff6b6b; margin: 2rem 0 1rem 0;">Add New Agent</h4>', unsafe_allow_html=True)
             
-            with st.form(key="elite_agent_form", clear_on_submit=True):
-                col1, col2 = st.columns(2)
+            with st.form(key="agent_form", clear_on_submit=True):
+                col1, col2 = st.columns([1, 1])
                 with col1:
-                    new_agent_name = st.text_input("Elite Agent Name *", 
+                    new_agent_name = st.text_input("Agent Name *", 
                                                  placeholder="Full name of new agent")
                 with col2:
-                    new_agent_code = st.text_input("Unique Access Code *", 
+                    new_agent_code = st.text_input("Access Code *", 
                                                  type="password",
                                                  placeholder="Generate unique code")
                 
-                col_btn1, col_btn2 = st.columns(2)
+                col_btn1, col_btn2 = st.columns([1, 1])
                 with col_btn1:
-                    add_agent = st.form_submit_button("Onboard Elite Agent", use_container_width=True)
+                    add_agent = st.form_submit_button("Add Agent", use_container_width=True)
                 with col_btn2:
                     if st.form_submit_button("Reset Form", use_container_width=True):
                         st.rerun()
@@ -828,7 +827,7 @@ elif st.session_state.page == 'admin':
                 if add_agent and new_agent_name and new_agent_code:
                     new_row = [new_agent_name, new_agent_code]
                     agents_sheet.append_row(new_row)
-                    st.success(f"Welcome aboard, {new_agent_name}! Elite agent onboarded successfully!")
+                    st.success(f"Welcome aboard, {new_agent_name}! Agent added successfully!")
                     st.balloons()
                     st.rerun()
                 elif add_agent:
@@ -863,10 +862,10 @@ st.markdown('''
     margin-top: 3rem;
 ">
     <div style="margin-bottom: 1rem;">
-        <strong>Hunter International</strong> | Elite Agent Management System
+        <strong>Hunter Agents</strong> | Professional Management System
     </div>
     <div>
-        © 2025 Powered by Advanced AI Technology | All Rights Reserved
+        © 2025 Powered by Advanced Technology | All Rights Reserved
     </div>
 </div>
 ''', unsafe_allow_html=True)
