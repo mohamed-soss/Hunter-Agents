@@ -409,3 +409,4 @@ elif st.session_state.page == 'admin':
     if st.button("Back to Control Hub", use_container_width=True):
         st.session_state.page = 'control_hub'
         st.rerun()
+
