@@ -223,53 +223,61 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     
-    /* Enhanced Buttons */
+    /* Enhanced Buttons - Fixed for deprecation */
     .stButton > button {
-        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%);
-        color: #ffffff;
-        border: none;
-        border-radius: 16px;
-        padding: 1.2rem 3rem;
-        font-weight: 700;
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-        cursor: pointer;
-    }
-    
-    .stButton > button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-    
-    .stButton > button:hover::before {
-        left: 100%;
+        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 0.8rem 2rem !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin: 0.5rem 0 !important;
     }
     
     .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4);
-        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%);
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
+        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
     }
     
-    .danger-button {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 50%, #d63031 100%);
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    .stButton > button:active {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3) !important;
     }
     
-    .danger-button:hover {
-        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
-        background: linear-gradient(135deg, #ee5a52 0%, #ff6b6b 50%, #ff5252 100%);
+    /* Form Submit Buttons */
+    .stForm > div > button {
+        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 1rem 2rem !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3) !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin-top: 1rem !important;
+    }
+    
+    .stForm > div > button:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
+        background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
     }
     
     /* Form Elements */
@@ -285,6 +293,8 @@ st.markdown("""
         padding: 14px 16px;
         backdrop-filter: blur(10px);
         transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 1rem;
     }
     
     .stTextInput > div > div > input:focus,
@@ -475,7 +485,7 @@ if st.session_state.page == 'control_hub':
         st.markdown('<div class="control-card fade-in">', unsafe_allow_html=True)
         st.markdown('<h3>Agent Portal</h3>', unsafe_allow_html=True)
         st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Access your personalized dashboard, submit callbacks, and track performance metrics</p>', unsafe_allow_html=True)
-        if st.button("Enter Portal", key="user_portal", use_container_width=True):
+        if st.button("Enter Portal", key="user_portal"):
             st.session_state.page = 'login'
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -484,7 +494,7 @@ if st.session_state.page == 'control_hub':
         st.markdown('<div class="control-card fade-in" style="animation-delay: 0.2s;">', unsafe_allow_html=True)
         st.markdown('<h3>Admin Console</h3>', unsafe_allow_html=True)
         st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Complete system control, agent management, and performance analytics</p>', unsafe_allow_html=True)
-        if st.button("Admin Access", key="admin_dashboard", use_container_width=True):
+        if st.button("Admin Access", key="admin_dashboard"):
             st.session_state.page = 'admin'
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -515,7 +525,7 @@ elif st.session_state.page == 'login':
         
         col_btn1, col_btn2 = st.columns([1, 1])
         with col_btn1:
-            if st.button("Login", key="login_submit", use_container_width=True):
+            if st.button("Login", key="login_submit"):
                 matching_row = agents_df[
                     (agents_df['Agent Name'] == selected_agent) & 
                     (agents_df['Agent Code'] == agent_code)
@@ -529,7 +539,7 @@ elif st.session_state.page == 'login':
                     st.error("Invalid credentials. Please try again.")
         
         with col_btn2:
-            if st.button("Back to Hub", key="back_to_hub", use_container_width=True):
+            if st.button("Back to Hub", key="back_to_hub"):
                 st.session_state.page = 'control_hub'
                 st.rerun()
         
@@ -543,26 +553,25 @@ elif st.session_state.page == 'agent_dashboard':
         unsafe_allow_html=True
     )
     
-    # Enhanced Sidebar - Removed "Hunter Agents Portal" text
+    # Enhanced Sidebar - Clean with just logo and navigation
     with st.sidebar:
-        # Removed the header text section
         st.markdown('<div style="padding: 1rem; text-align: center;">', unsafe_allow_html=True)
         st.image("hunter logo-02.jpg", width=120, use_column_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        if st.button("Callbacks", key="menu_callbacks", use_container_width=True):
+        if st.button("Callbacks", key="menu_callbacks"):
             st.session_state.menu = "Callbacks"
             st.rerun()
         
         st.markdown('<div style="height: 1rem;"></div>', unsafe_allow_html=True)
         
-        if st.button("Logout", key="agent_logout", use_container_width=True):
+        if st.button("Logout", key="agent_logout"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.session_state.page = 'control_hub'
             st.rerun()
         
-        if st.button("Control Hub", key="agent_back_hub", use_container_width=True):
+        if st.button("Control Hub", key="agent_back_hub"):
             st.session_state.page = 'control_hub'
             st.rerun()
         
@@ -644,7 +653,7 @@ elif st.session_state.page == 'agent_dashboard':
             
             # Submit section
             st.markdown('<div style="text-align: center; margin-top: 2rem;">', unsafe_allow_html=True)
-            submit = st.form_submit_button("Submit Callback", use_container_width=True)
+            submit = st.form_submit_button("Submit Callback")
             st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown('</div>', unsafe_allow_html=True)
@@ -707,7 +716,7 @@ elif st.session_state.page == 'admin':
                                placeholder="Enter admin credentials",
                                help="Contact IT for access code")
         
-        if st.button("Verify Access", key="admin_verify", use_container_width=True):
+        if st.button("Verify Access", key="admin_verify"):
             if password == "admin1234":
                 st.session_state.admin_access = True
                 st.success("Admin Access Granted!")
@@ -771,7 +780,7 @@ elif st.session_state.page == 'admin':
             st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
             if not agent_filter.empty:
                 st.markdown('<div class="elite-card">', unsafe_allow_html=True)
-                st.dataframe(agent_filter, use_container_width=True, hide_index=True)
+                st.dataframe(agent_filter, hide_index=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.info(f"No callbacks found for {selected_agent}")
@@ -816,9 +825,9 @@ elif st.session_state.page == 'admin':
                 
                 col_btn1, col_btn2 = st.columns([1, 1])
                 with col_btn1:
-                    add_agent = st.form_submit_button("Add Agent", use_container_width=True)
+                    add_agent = st.form_submit_button("Add Agent")
                 with col_btn2:
-                    if st.form_submit_button("Reset Form", use_container_width=True):
+                    if st.form_submit_button("Reset Form"):
                         st.rerun()
                 
                 if add_agent and new_agent_name and new_agent_code:
@@ -834,7 +843,7 @@ elif st.session_state.page == 'admin':
         
         # Admin Controls
         st.markdown('<div style="text-align: center; margin-top: 3rem;">', unsafe_allow_html=True)
-        if st.button("Logout Admin", key="admin_logout", use_container_width=True):
+        if st.button("Logout Admin", key="admin_logout"):
             if hasattr(st.session_state, 'admin_access'):
                 del st.session_state.admin_access
             st.session_state.page = 'control_hub'
@@ -844,7 +853,7 @@ elif st.session_state.page == 'admin':
     # Back to hub button
     col1, col2 = st.columns([3, 1])
     with col2:
-        if st.button("Control Hub", key="admin_back_hub", use_container_width=True):
+        if st.button("Control Hub", key="admin_back_hub"):
             st.session_state.page = 'control_hub'
             st.rerun()
 
