@@ -55,7 +55,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced Custom CSS - Professional & Stunning Design
+# Enhanced Custom CSS - Fixed for PC Compatibility
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
@@ -108,6 +108,10 @@ st.markdown("""
         text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
     }
     
+    @media (max-width: 768px) {
+        .hero-header { font-size: 3rem; padding: 2rem 1rem; }
+    }
+    
     @keyframes glow {
         from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }
         to { filter: drop-shadow(0 0 40px rgba(255, 107, 107, 0.5)); }
@@ -139,6 +143,7 @@ st.markdown("""
     .elite-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 24px;
         padding: 2.5rem;
@@ -181,6 +186,7 @@ st.markdown("""
     .control-card {
         background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
         backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border: 2px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
         padding: 3rem 2rem;
@@ -220,10 +226,13 @@ st.markdown("""
         background: linear-gradient(135deg, #ffffff, #00d4ff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 1rem;
     }
     
-    /* Enhanced Buttons - Fixed for deprecation */
+    /* FIXED BUTTON STYLING - Works on PC and Mobile */
+    button[kind="primary"], 
+    button[kind="secondary"], 
     .stButton > button {
         background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
         color: #ffffff !important;
@@ -241,22 +250,28 @@ st.markdown("""
         cursor: pointer !important;
         width: 100% !important;
         margin: 0.5rem 0 !important;
+        min-height: 44px !important;
     }
     
+    button[kind="primary"]:hover, 
+    button[kind="secondary"]:hover, 
     .stButton > button:hover {
         transform: translateY(-3px) !important;
         box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
         background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
     }
     
+    button[kind="primary"]:active, 
+    button[kind="secondary"]:active, 
     .stButton > button:active {
         transform: translateY(-1px) !important;
         box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3) !important;
     }
     
-    /* Form Submit Buttons */
-    div[data-testid="column"]:div > div > div > button,
-    .stForm > div > button {
+    /* Form Submit Buttons - Enhanced Targeting */
+    div.element-container div[role="button"],
+    .stFormSubmitButton button,
+    div[data-baseweb="button"] {
         background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%) !important;
         color: #ffffff !important;
         border: none !important;
@@ -273,10 +288,12 @@ st.markdown("""
         cursor: pointer !important;
         width: 100% !important;
         margin-top: 1rem !important;
+        min-height: 44px !important;
     }
     
-    div[data-testid="column"]:div > div > div > button:hover,
-    .stForm > div > button:hover {
+    div.element-container div[role="button"]:hover,
+    .stFormSubmitButton button:hover,
+    div[data-baseweb="button"]:hover {
         transform: translateY(-3px) !important;
         box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4) !important;
         background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%) !important;
@@ -287,51 +304,79 @@ st.markdown("""
     .stSelectbox > div > div > select,
     .stDateInput > div > div > input,
     .stTextArea > div > div > textarea {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        color: #ffffff;
-        font-weight: 500;
-        padding: 14px 16px;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        padding: 14px 16px !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
+        margin-bottom: 1rem !important;
+        box-sizing: border-box !important;
     }
     
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus,
     .stDateInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
-        border-color: #00d4ff;
-        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        background: rgba(255, 255, 255, 0.15);
+        border-color: #00d4ff !important;
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        outline: none !important;
     }
     
     .stTextInput > div > div > input::placeholder,
     .stTextArea > div > div > textarea::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+    
+    /* Selectbox dropdown */
+    .stSelectbox div[role="listbox"] {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
     }
     
     /* Sidebar Enhancement */
-    .css-1d391kg {
-        background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     
     /* DataFrame Enhancement */
     .stDataFrame {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .stDataFrame table {
+        color: #ffffff !important;
+    }
+    
+    .stDataFrame th {
+        background: rgba(0, 212, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .stDataFrame td {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
     }
     
     /* Metric Cards */
     .metric-container {
         background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
         backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border-radius: 20px;
         padding: 2rem;
         text-align: center;
@@ -351,6 +396,7 @@ st.markdown("""
         background: linear-gradient(135deg, #00d4ff, #ff6b6b);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 0.5rem;
     }
     
@@ -437,25 +483,44 @@ st.markdown("""
     .fade-in { animation: fadeIn 1s ease-out; }
     .slide-in-left { animation: slideInLeft 0.8s ease-out; }
     
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero-header { font-size: 3rem; padding: 2rem 1rem; }
-        .control-card { padding: 2rem 1rem; margin-bottom: 1.5rem; }
-        .elite-card { padding: 2rem 1.5rem; }
-    }
-    
     /* Success/Error Messages */
     .stSuccess, .stError, .stWarning, .stInfo {
-        border-radius: 12px;
-        border-left: 4px solid #00d4ff;
-        background: rgba(0, 212, 255, 0.1);
-        color: #ffffff;
-        font-weight: 500;
-        padding: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px !important;
+        border-left: 4px solid #00d4ff !important;
+        background: rgba(0, 212, 255, 0.1) !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        padding: 1rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     
-    .stError { border-left-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
+    .stError { border-left-color: #ff6b6b !important; background: rgba(255, 107, 107, 0.1) !important; }
+    
+    /* Tabs Enhancement */
+    .stTabs [data-baseweb="tab-list"] {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: transparent !important;
+        border-radius: 8px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        margin: 2px !important;
+        padding: 8px 16px !important;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        color: #00d4ff !important;
+        background: rgba(0, 212, 255, 0.1) !important;
+    }
+    
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        color: #00d4ff !important;
+        background: rgba(0, 212, 255, 0.2) !important;
+        font-weight: 600 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
