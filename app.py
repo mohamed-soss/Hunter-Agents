@@ -3,6 +3,7 @@ import gspread
 import streamlit as st
 import pandas as pd
 import datetime
+import time
 
 # Setup Google Sheets connection
 scope = [
@@ -54,17 +55,58 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling with black bold text and glow effect
+# Custom CSS for styling with video transition and black bold text
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
     .main {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
         font-family: 'Poppins', sans-serif;
+        position: relative;
+        overflow: hidden;
     }
     .stApp {
         background: #F9FAFB;
+        position: relative;
     }
+    
+    /* Video Transition Overlay */
+    .video-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .video-transition.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .video-transition video {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        opacity: 0.8;
+    }
+    
+    /* Page Content Wrapper */
+    .page-content {
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        animation-delay: 0.3s;
+    }
+    .page-content.fade-in {
+        opacity: 1;
+        transform: scale(1);
+    }
+    
     .header {
         font-size: 3rem;
         font-weight: 900;
@@ -194,6 +236,32 @@ st.markdown("""
         font-weight: 700;
         text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     }
+    
+    /* Loading animation for video */
+    .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10000;
+        width: 60px;
+        height: 60px;
+        border: 6px solid rgba(0, 0, 0, 0.1);
+        border-top: 6px solid #000000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .loading-spinner.active {
+        opacity: 1;
+    }
+    
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
     @keyframes slideInDown {
         from { transform: translateY(-100px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
@@ -211,6 +279,77 @@ st.markdown("""
         to { opacity: 1; }
     }
     </style>
+    
+    <!-- Video Transition Container -->
+    <div class="video-transition" id="videoTransition">
+        <video id="transitionVideo" autoplay muted loop playsinline>
+            <source src="vid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner"></div>
+    
+    <script>
+        // Video transition control
+        function showTransition(callback) {
+            const videoTransition = document.getElementById('videoTransition');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const video = document.getElementById('transitionVideo');
+            const pageContent = document.querySelector('.page-content');
+            
+            // Show loading spinner
+            loadingSpinner.classList.add('active');
+            
+            // Start video
+            video.currentTime = 0;
+            video.play();
+            
+            // Show transition overlay
+            videoTransition.classList.add('active');
+            
+            // Hide current page content
+            if (pageContent) {
+                pageContent.classList.remove('fade-in');
+            }
+            
+            // Wait for video to start playing, then wait for duration
+            video.addEventListener('loadeddata', function() {
+                setTimeout(function() {
+                    // Hide transition
+                    videoTransition.classList.remove('active');
+                    loadingSpinner.classList.remove('active');
+                    
+                    // Show new page content
+                    if (pageContent) {
+                        setTimeout(function() {
+                            pageContent.classList.add('fade-in');
+                        }, 100);
+                    }
+                    
+                    // Execute callback if provided
+                    if (callback) {
+                        setTimeout(callback, 300);
+                    }
+                }, 2000); // Video duration - adjust based on your video length
+            });
+        }
+        
+        // Listen for Streamlit rerun events
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    const newContent = document.querySelector('.page-content');
+                    if (newContent && !newContent.classList.contains('fade-in')) {
+                        newContent.classList.add('fade-in');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+    </script>
 """, unsafe_allow_html=True)
 
 # Session state
@@ -220,193 +359,253 @@ if 'agent_name' not in st.session_state:
     st.session_state.agent_name = None
 if 'menu' not in st.session_state:
     st.session_state.menu = "Callbacks"
+if 'transition_triggered' not in st.session_state:
+    st.session_state.transition_triggered = False
+
+# Function to trigger video transition
+def trigger_transition():
+    if not st.session_state.transition_triggered:
+        st.session_state.transition_triggered = True
+        st.rerun()
+
+# Page wrapper with transition class
+def render_page_content(content):
+    st.markdown('<div class="page-content">', unsafe_allow_html=True)
+    content()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Control Hub Page
 if st.session_state.page == 'control_hub':
-    st.markdown('<div class="header">Hunter Agents</div>', unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.button("User Portal", key="user_portal", use_container_width=True):
-            st.session_state.page = 'login'
-            st.rerun()
-    with col2:
-        if st.button("Admin Dashboard", key="admin_dashboard", use_container_width=True):
-            st.session_state.page = 'admin'
-            st.rerun()
+    def control_hub_content():
+        st.markdown('<div class="header">Hunter Agents</div>', unsafe_allow_html=True)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            if st.button("User Portal", key="user_portal", use_container_width=True):
+                st.session_state.page = 'login'
+                st.session_state.transition_triggered = False
+                trigger_transition()
+        with col2:
+            if st.button("Admin Dashboard", key="admin_dashboard", use_container_width=True):
+                st.session_state.page = 'admin'
+                st.session_state.transition_triggered = False
+                trigger_transition()
+    
+    render_page_content(control_hub_content)
 
 # Login Page (User Portal)
 elif st.session_state.page == 'login':
-    st.markdown('<div class="header">User Portal</div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        agents_df = get_df(agents_sheet)
-        if agents_df.empty:
-            sample_agents = [['John Doe', 'JD123'], ['Jane Smith', 'JS456']]
-            for row in sample_agents:
-                agents_sheet.append_row(row)
+    def login_content():
+        st.markdown('<div class="header">User Portal</div>', unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
             agents_df = get_df(agents_sheet)
+            if agents_df.empty:
+                sample_agents = [['John Doe', 'JD123'], ['Jane Smith', 'JS456']]
+                for row in sample_agents:
+                    agents_sheet.append_row(row)
+                agents_df = get_df(agents_sheet)
+            
+            agent_names = agents_df['Agent Name'].tolist()
+            selected_agent = st.selectbox("Select Your Name", agent_names)
+            agent_code = st.text_input("Enter Your Code", type="password")
         
-        agent_names = agents_df['Agent Name'].tolist()
-        selected_agent = st.selectbox("Select Your Name", agent_names)
-        agent_code = st.text_input("Enter Your Code", type="password")
+        if st.button("Login", use_container_width=True):
+            matching_row = agents_df[
+                (agents_df['Agent Name'] == selected_agent) & 
+                (agents_df['Agent Code'] == agent_code)
+            ]
+            if not matching_row.empty:
+                st.session_state.agent_name = selected_agent
+                st.session_state.page = 'agent_dashboard'
+                st.session_state.transition_triggered = False
+                trigger_transition()
+            else:
+                st.error("Invalid name or code.")
+        
+        if st.button("Back to Control Hub", use_container_width=True):
+            st.session_state.page = 'control_hub'
+            st.session_state.transition_triggered = False
+            trigger_transition()
     
-    if st.button("Login", use_container_width=True):
-        matching_row = agents_df[
-            (agents_df['Agent Name'] == selected_agent) & 
-            (agents_df['Agent Code'] == agent_code)
-        ]
-        if not matching_row.empty:
-            st.session_state.agent_name = selected_agent
-            st.session_state.page = 'agent_dashboard'
-            st.rerun()
-        else:
-            st.error("Invalid name or code.")
-    
-    if st.button("Back to Control Hub", use_container_width=True):
-        st.session_state.page = 'control_hub'
-        st.rerun()
+    render_page_content(login_content)
 
 # Agent Dashboard
 elif st.session_state.page == 'agent_dashboard':
-    st.markdown(
-        f'<div class="header">Welcome, {st.session_state.agent_name}!</div>', 
-        unsafe_allow_html=True
-    )
+    def agent_dashboard_content():
+        st.markdown(
+            f'<div class="header">Welcome, {st.session_state.agent_name}!</div>', 
+            unsafe_allow_html=True
+        )
+        
+        with st.sidebar:
+            st.image("hunter logo-02.jpg", width=180)
+
+            if st.button("Callbacks", use_container_width=True):
+                st.session_state.menu = "Callbacks"
+                st.rerun()
+
+            if st.button("Logout", use_container_width=True):
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.session_state.page = 'control_hub'
+                st.session_state.transition_triggered = False
+                trigger_transition()
+
+            if st.button("Back to Control Hub", use_container_width=True):
+                st.session_state.page = 'control_hub'
+                st.session_state.transition_triggered = False
+                trigger_transition()
+
+        menu = st.session_state.menu
+
+        # ---------------- Callbacks ----------------
+        if menu == "Callbacks":
+            st.markdown('<div class="subheader">Submit New Callback</div>', unsafe_allow_html=True)
+            with st.form(key="callback_form", clear_on_submit=True):
+                col1, col2 = st.columns(2)
+                with col1:
+                    full_name = st.text_input("Full Name")
+                    address = st.text_input("Address")
+                    mcn = st.text_input("MCN")
+                with col2:
+                    dob = st.date_input("DOB")
+                    number = st.text_input("Number")
+                    cb_date = st.date_input("CB Date")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    notes = st.text_area("Notes", height=120)
+                    medical_conditions = st.text_area("Medical Conditions", height=120)
+                with col2:
+                    cb_timing = st.text_input("CB Timing")
+                    cb_type = st.selectbox("CB Type", ["cold", "warm", "hot"])
+                
+                submit = st.form_submit_button("Submit Callback", use_container_width=True)
+            
+            if submit:
+                new_row = [
+                    st.session_state.agent_name, full_name, address, mcn, str(dob), 
+                    number, notes, medical_conditions, str(cb_date), cb_timing, cb_type
+                ]
+                callbacks_sheet.append_row(new_row)
+                st.success("Callback submitted successfully!")
+                st.rerun()
+            
+            st.markdown('<div class="subheader">Your Callbacks</div>', unsafe_allow_html=True)
+            callbacks_df = get_df(callbacks_sheet)
+            agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == st.session_state.agent_name].reset_index(drop=True)
+            
+            if not agent_callbacks.empty:
+                for idx, row in agent_callbacks.iterrows():
+                    with st.container():
+                        st.markdown('<div class="card">', unsafe_allow_html=True)
+                        col1, col2 = st.columns([2, 1])
+                        with col1:
+                            st.markdown(f'<div class="card-content"><strong>{row["Full Name"]}</strong></div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">{row["Address"]} | {row["Number"]}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">MCN: {row["MCN"]} | DOB: {row["DOB"]}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">Medical Conditions: {row["Medical Conditions"][:100]}...</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">Notes: {row["Notes"][:100]}...</div>', unsafe_allow_html=True)
+                        with col2:
+                            st.markdown(f'<div class="card-content">CB Date: {row["CB Date"]}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">CB Timing: {row["CB Timing"]}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="card-content">CB Type: {row["CB Type"]}</div>', unsafe_allow_html=True)
+                        st.markdown('</div>', unsafe_allow_html=True)
+            else:
+                st.info("No callbacks yet.")
     
-    with st.sidebar:
-        st.image("hunter logo-02.jpg", width=180)
-
-        if st.button("Callbacks", use_container_width=True):
-            st.session_state.menu = "Callbacks"
-            st.rerun()
-
-        if st.button("Logout", use_container_width=True):
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.session_state.page = 'control_hub'
-            st.rerun()
-
-        if st.button("Back to Control Hub", use_container_width=True):
-            st.session_state.page = 'control_hub'
-            st.rerun()
-
-    menu = st.session_state.menu
-
-    # ---------------- Callbacks ----------------
-    if menu == "Callbacks":
-        st.markdown('<div class="subheader">Submit New Callback</div>', unsafe_allow_html=True)
-        with st.form(key="callback_form", clear_on_submit=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                full_name = st.text_input("Full Name")
-                address = st.text_input("Address")
-                mcn = st.text_input("MCN")
-            with col2:
-                dob = st.date_input("DOB")
-                number = st.text_input("Number")
-                cb_date = st.date_input("CB Date")
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                notes = st.text_area("Notes", height=120)
-                medical_conditions = st.text_area("Medical Conditions", height=120)
-            with col2:
-                cb_timing = st.text_input("CB Timing")
-                cb_type = st.selectbox("CB Type", ["cold", "warm", "hot"])
-            
-            submit = st.form_submit_button("Submit Callback", use_container_width=True)
-        
-        if submit:
-            new_row = [
-                st.session_state.agent_name, full_name, address, mcn, str(dob), 
-                number, notes, medical_conditions, str(cb_date), cb_timing, cb_type
-            ]
-            callbacks_sheet.append_row(new_row)
-            st.success("Callback submitted successfully!")
-            st.rerun()
-        
-        st.markdown('<div class="subheader">Your Callbacks</div>', unsafe_allow_html=True)
-        callbacks_df = get_df(callbacks_sheet)
-        agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == st.session_state.agent_name].reset_index(drop=True)
-        
-        if not agent_callbacks.empty:
-            for idx, row in agent_callbacks.iterrows():
-                with st.container():
-                    st.markdown('<div class="card">', unsafe_allow_html=True)
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        st.markdown(f'<div class="card-content"><strong>{row["Full Name"]}</strong></div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">{row["Address"]} | {row["Number"]}</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">MCN: {row["MCN"]} | DOB: {row["DOB"]}</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">Medical Conditions: {row["Medical Conditions"][:100]}...</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">Notes: {row["Notes"][:100]}...</div>', unsafe_allow_html=True)
-                    with col2:
-                        st.markdown(f'<div class="card-content">CB Date: {row["CB Date"]}</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">CB Timing: {row["CB Timing"]}</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div class="card-content">CB Type: {row["CB Type"]}</div>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.info("No callbacks yet.")
+    render_page_content(agent_dashboard_content)
 
 # ---------------- Admin Page ----------------
 elif st.session_state.page == 'admin':
-    st.markdown('<div class="header">Admin Dashboard</div>', unsafe_allow_html=True)
-    
-    password = st.text_input("Enter Admin Password", type="password", help="Password: admin1234")
-    
-    if password == "admin1234":
-        st.success("Access Granted!")
+    def admin_content():
+        st.markdown('<div class="header">Admin Dashboard</div>', unsafe_allow_html=True)
         
-        agents_df = get_df(agents_sheet)
-        selected_agent = st.selectbox("Select Agent", agents_df['Agent Name'].tolist())
+        password = st.text_input("Enter Admin Password", type="password", help="Password: admin1234")
         
-        tab1, tab2 = st.tabs(["Callbacks", "Manage Agents"])
-        
-        with tab1:
-            st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
-            callbacks_df = get_df(callbacks_sheet)
-            agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == selected_agent]
-            if not agent_callbacks.empty:
-                st.markdown('<div class="card">', unsafe_allow_html=True)
-                st.dataframe(agent_callbacks, use_container_width=True, hide_index=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-            else:
-                st.info("No callbacks.")
-        
-        with tab2:
-            st.markdown('<div class="subheader">Manage Agents</div>', unsafe_allow_html=True)
-            st.markdown('<div class="card">', unsafe_allow_html=True)
+        if password == "admin1234":
+            st.success("Access Granted!")
             
-            # Display all agents
-            st.subheader("Current Agents")
-            st.dataframe(agents_df, use_container_width=True, hide_index=True)
+            agents_df = get_df(agents_sheet)
+            selected_agent = st.selectbox("Select Agent", agents_df['Agent Name'].tolist())
             
-            # Add new agent form
-            st.markdown("### Add New Agent")
-            with st.form(key="add_agent_form", clear_on_submit=True):
-                col1, col2 = st.columns(2)
-                with col1:
-                    new_agent_name = st.text_input("Agent Name")
-                with col2:
-                    new_agent_code = st.text_input("Agent Code", type="password")
-                
-                add_agent = st.form_submit_button("Add Agent", use_container_width=True)
+            tab1, tab2 = st.tabs(["Callbacks", "Manage Agents"])
             
-            if add_agent:
-                if new_agent_name and new_agent_code:
-                    new_row = [new_agent_name, new_agent_code]
-                    agents_sheet.append_row(new_row)
-                    st.success(f"Agent {new_agent_name} added successfully!")
-                    st.rerun()
+            with tab1:
+                st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
+                callbacks_df = get_df(callbacks_sheet)
+                agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == selected_agent]
+                if not agent_callbacks.empty:
+                    st.markdown('<div class="card">', unsafe_allow_html=True)
+                    st.dataframe(agent_callbacks, use_container_width=True, hide_index=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
                 else:
-                    st.error("Please fill in both fields.")
+                    st.info("No callbacks.")
             
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-    else:
-        st.error("Invalid password.")
+            with tab2:
+                st.markdown('<div class="subheader">Manage Agents</div>', unsafe_allow_html=True)
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                
+                # Display all agents
+                st.subheader("Current Agents")
+                st.dataframe(agents_df, use_container_width=True, hide_index=True)
+                
+                # Add new agent form
+                st.markdown("### Add New Agent")
+                with st.form(key="add_agent_form", clear_on_submit=True):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        new_agent_name = st.text_input("Agent Name")
+                    with col2:
+                        new_agent_code = st.text_input("Agent Code", type="password")
+                    
+                    add_agent = st.form_submit_button("Add Agent", use_container_width=True)
+                
+                if add_agent:
+                    if new_agent_name and new_agent_code:
+                        new_row = [new_agent_name, new_agent_code]
+                        agents_sheet.append_row(new_row)
+                        st.success(f"Agent {new_agent_name} added successfully!")
+                        st.rerun()
+                    else:
+                        st.error("Please fill in both fields.")
+                
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+        else:
+            st.error("Invalid password.")
+        
+        if st.button("Back to Control Hub", use_container_width=True):
+            st.session_state.page = 'control_hub'
+            st.session_state.transition_triggered = False
+            trigger_transition()
     
-    if st.button("Back to Control Hub", use_container_width=True):
-        st.session_state.page = 'control_hub'
-        st.rerun()
+    render_page_content(admin_content)
 
+# JavaScript to trigger video transition on page change
+st.markdown("""
+<script>
+    // Override Streamlit's rerun to include video transition
+    window.streamlitRerunWithTransition = function() {
+        showTransition(function() {
+            window.parent.Streamlit.setComponentValue({rerun: true});
+        });
+    };
+    
+    // Listen for button clicks and trigger transition
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('button')) {
+            const buttonText = e.target.closest('button').textContent;
+            if (buttonText.includes('User Portal') || 
+                buttonText.includes('Admin Dashboard') || 
+                buttonText.includes('Login') || 
+                buttonText.includes('Back to Control Hub') ||
+                buttonText.includes('Logout')) {
+                setTimeout(function() {
+                    showTransition();
+                }, 100);
+            }
+        }
+    });
+</script>
+""", unsafe_allow_html=True)
