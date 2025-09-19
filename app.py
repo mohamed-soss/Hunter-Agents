@@ -3,8 +3,6 @@ import gspread
 import streamlit as st
 import pandas as pd
 import datetime
-import matplotlib.pyplot as plt
-import io
 
 # Setup Google Sheets connection
 scope = [
@@ -19,8 +17,6 @@ if isinstance(service_account_info.get("private_key"), str):
 
 creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
 client = gspread.authorize(creds)
-
-
 
 # Open the Google Sheet using provided Sheet ID
 SHEET_ID = "1PzBTiG0XkMOlnq0o-rO80_tg252nxtxOt5-aX1h0ivc"
@@ -42,11 +38,9 @@ def create_sheet_if_not_exists(sheet_name, headers):
 # Initialize sheets with headers
 AGENTS_HEADERS = ['Agent Name', 'Agent Code']
 CALLBACKS_HEADERS = ['Agent Name', 'Full Name', 'Address', 'MCN', 'DOB', 'Number', 'Notes', 'Medical Conditions', 'CB Date', 'CB Timing', 'CB Type']
-CHECKS_HEADERS = ['Agent Name', 'Plan', 'Date']
 
 agents_sheet = create_sheet_if_not_exists("Agents", AGENTS_HEADERS)
 callbacks_sheet = create_sheet_if_not_exists("Callbacks", CALLBACKS_HEADERS)
-checks_sheet = create_sheet_if_not_exists("Checks", CHECKS_HEADERS)
 
 # Function to get data as DataFrame
 def get_df(worksheet):
@@ -60,10 +54,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
+# Custom CSS for styling with black bold text and glow effect
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
     .main {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
         font-family: 'Poppins', sans-serif;
@@ -73,72 +67,148 @@ st.markdown("""
     }
     .header {
         font-size: 3rem;
-        font-weight: 700;
-        color: #FFFFFF;
+        font-weight: 900;
+        color: #000000;
         text-align: center;
         margin-bottom: 2.5rem;
         padding: 2rem;
-        background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.7) 100%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
         border-radius: 16px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2), 0 0 30px rgba(0, 0, 0, 0.1);
         animation: slideInDown 1s ease-out;
+        border: 2px solid rgba(0, 0, 0, 0.1);
     }
     .subheader {
         font-size: 2rem;
-        font-weight: 600;
-        color: #1E40AF;
+        font-weight: 800;
+        color: #000000;
         margin-bottom: 2rem;
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.3), 0 0 16px rgba(0, 0, 0, 0.2);
         animation: fadeInUp 0.8s ease-out;
     }
     .card {
-        background: #FFFFFF;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 251, 0.9) 100%);
         padding: 2.5rem;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         margin-bottom: 2.5rem;
-        border-left: 6px solid #3B82F6;
+        border-left: 6px solid #000000;
         transition: all 0.4s ease;
         animation: slideInLeft 0.8s ease-out;
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
     .card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 15px 50px rgba(59, 130, 246, 0.2);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    }
+    .card-content {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
     }
     .metric-card {
-        background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
-        color: #FFFFFF;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F3F4F6 100%);
+        color: #000000;
         padding: 2rem;
         border-radius: 20px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         transition: all 0.4s ease;
         animation: fadeIn 1s ease-out;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        font-weight: 800;
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
     }
     .metric-card:hover {
         transform: scale(1.08);
-        box-shadow: 0 15px 50px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     }
     .stButton > button {
-        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
         color: #FFFFFF;
         border: none;
         border-radius: 12px;
         padding: 1.4rem 3rem;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 1.3rem;
         backdrop-filter: blur(5px);
-        background-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 32px rgba(30, 58, 138, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         transition: all 0.4s ease, transform 0.2s ease;
+        text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
     }
     .stButton > button:hover {
-        background: linear-gradient(135deg, #2A5B9E 0%, #4DA0FA 100%);
+        background: linear-gradient(135deg, #333333 0%, #555555 100%);
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(30, 58, 138, 0.4);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     }
     .stButton > button:active {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    .stTextInput > div > div > input {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .stTextInput > div > div > input:focus {
+        border-color: #000000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .stSelectbox > div > div > select {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .stDateInput > div > div > input {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .stTextArea > div > div > textarea {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .stDataFrame {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .stError, .stWarning, .stSuccess, .stInfo {
+        color: #000000;
+        font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+    @keyframes slideInDown {
+        from { transform: translateY(-100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideInLeft {
+        from { transform: translateX(-50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -210,14 +280,6 @@ elif st.session_state.page == 'agent_dashboard':
             st.session_state.menu = "Callbacks"
             st.rerun()
 
-        if st.button("Add Check", use_container_width=True):
-            st.session_state.menu = "Add Check"
-            st.rerun()
-
-        if st.button("My Analytics", use_container_width=True):
-            st.session_state.menu = "My Analytics"
-            st.rerun()
-
         if st.button("Logout", use_container_width=True):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
@@ -273,93 +335,18 @@ elif st.session_state.page == 'agent_dashboard':
                     st.markdown('<div class="card">', unsafe_allow_html=True)
                     col1, col2 = st.columns([2, 1])
                     with col1:
-                        st.markdown(f"**{row['Full Name']}**")
-                        st.markdown(f"{row['Address']} | {row['Number']}")
-                        st.markdown(f"MCN: {row['MCN']} | DOB: {row['DOB']}")
-                        st.markdown(f"Medical Conditions: {row['Medical Conditions'][:100]}...")
-                        st.markdown(f"Notes: {row['Notes'][:100]}...")
+                        st.markdown(f'<div class="card-content"><strong>{row["Full Name"]}</strong></div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">{row["Address"]} | {row["Number"]}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">MCN: {row["MCN"]} | DOB: {row["DOB"]}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">Medical Conditions: {row["Medical Conditions"][:100]}...</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">Notes: {row["Notes"][:100]}...</div>', unsafe_allow_html=True)
                     with col2:
-                        st.markdown(f"CB Date: {row['CB Date']}")
-                        st.markdown(f"CB Timing: {row['CB Timing']}")
-                        st.markdown(f"CB Type: {row['CB Type']}")
+                        st.markdown(f'<div class="card-content">CB Date: {row["CB Date"]}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">CB Timing: {row["CB Timing"]}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div class="card-content">CB Type: {row["CB Type"]}</div>', unsafe_allow_html=True)
                     st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("No callbacks yet.")
-
-    # ---------------- Add Check ----------------
-    elif menu == "Add Check":
-        st.markdown('<div class="subheader">Add New Check</div>', unsafe_allow_html=True)
-        col1, col2 = st.columns(2)
-        with col1:
-            plan = st.selectbox("Select Plan", ["HMO", "PPO", "OPlan"])
-        with col2:
-            check_date = st.date_input("Check Date", value=datetime.date.today())
-        
-        if st.button("Add Check", use_container_width=True):
-            new_row = [st.session_state.agent_name, plan, str(check_date)]
-            checks_sheet.append_row(new_row)
-            st.success("Check added successfully!")
-            st.rerun()
-        
-        st.markdown('<div class="subheader">Your Check Summary</div>', unsafe_allow_html=True)
-        checks_df = get_df(checks_sheet)
-        agent_checks = checks_df[checks_df['Agent Name'] == st.session_state.agent_name]
-        total_checks = len(agent_checks)
-        checks_per_plan = agent_checks['Plan'].value_counts().to_dict()
-        
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("Total Checks", total_checks)
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col2:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("HMO", checks_per_plan.get('HMO', 0))
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col3:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("PPO", checks_per_plan.get('PPO', 0))
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-        st.metric("OPlan", checks_per_plan.get('OPlan', 0))
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # ---------------- My Analytics ----------------
-    elif menu == "My Analytics":
-        st.markdown('<div class="subheader">Analytics Dashboard</div>', unsafe_allow_html=True)
-        checks_df = get_df(checks_sheet)
-        agent_checks = checks_df[checks_df['Agent Name'] == st.session_state.agent_name]
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            if not agent_checks.empty:
-                fig, ax = plt.subplots(figsize=(6, 4))
-                agent_checks['Plan'].value_counts().plot(
-                    kind='bar', ax=ax, color=['#3B82F6', '#60A5FA', '#93C5FD']
-                )
-                ax.set_title("Checks by Plan", fontsize=14, fontweight='bold')
-                ax.set_ylabel("Count")
-                plt.xticks(rotation=0)
-                buf = io.BytesIO()
-                fig.savefig(buf, format="png", bbox_inches='tight')
-                buf.seek(0)
-                st.image(buf.getvalue(), use_column_width=True)
-            else:
-                st.info("No data for visualization yet.")
-        
-        with col2:
-            callbacks_df = get_df(callbacks_sheet)
-            agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == st.session_state.agent_name]
-            cb_types = agent_callbacks['CB Type'].value_counts()
-            if not cb_types.empty:
-                fig, ax = plt.subplots(figsize=(6, 4))
-                cb_types.plot(kind='pie', autopct='%1.1f%%', ax=ax, colors=['#3B82F6', '#60A5FA', '#93C5FD'])
-                ax.set_title("Callbacks by Type", fontsize=14, fontweight='bold')
-                buf = io.BytesIO()
-                fig.savefig(buf, format="png", bbox_inches='tight')
-                buf.seek(0)
-                st.image(buf.getvalue(), use_column_width=True)
 
 # ---------------- Admin Page ----------------
 elif st.session_state.page == 'admin':
@@ -373,68 +360,52 @@ elif st.session_state.page == 'admin':
         agents_df = get_df(agents_sheet)
         selected_agent = st.selectbox("Select Agent", agents_df['Agent Name'].tolist())
         
-        tab1, tab2, tab3 = st.tabs(["Callbacks", "Checks", "Analytics"])
+        tab1, tab2 = st.tabs(["Callbacks", "Manage Agents"])
         
         with tab1:
             st.markdown(f'<div class="subheader">{selected_agent}\'s Callbacks</div>', unsafe_allow_html=True)
             callbacks_df = get_df(callbacks_sheet)
             agent_callbacks = callbacks_df[callbacks_df['Agent Name'] == selected_agent]
             if not agent_callbacks.empty:
+                st.markdown('<div class="card">', unsafe_allow_html=True)
                 st.dataframe(agent_callbacks, use_container_width=True, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.info("No callbacks.")
         
         with tab2:
-            st.markdown(f'<div class="subheader">{selected_agent}\'s Checks</div>', unsafe_allow_html=True)
-            checks_df = get_df(checks_sheet)
-            agent_checks = checks_df[checks_df['Agent Name'] == selected_agent]
-            if not agent_checks.empty:
-                st.dataframe(agent_checks, use_container_width=True, hide_index=True)
-                
-                total_checks = len(agent_checks)
-                checks_per_plan = agent_checks['Plan'].value_counts().to_dict()
-                
-                col1, col2, col3, col4 = st.columns(4)
+            st.markdown('<div class="subheader">Manage Agents</div>', unsafe_allow_html=True)
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            
+            # Display all agents
+            st.subheader("Current Agents")
+            st.dataframe(agents_df, use_container_width=True, hide_index=True)
+            
+            # Add new agent form
+            st.markdown("### Add New Agent")
+            with st.form(key="add_agent_form", clear_on_submit=True):
+                col1, col2 = st.columns(2)
                 with col1:
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("Total", total_checks)
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    new_agent_name = st.text_input("Agent Name")
                 with col2:
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("HMO", checks_per_plan.get('HMO', 0))
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col3:
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("PPO", checks_per_plan.get('PPO', 0))
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col4:
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("OPlan", checks_per_plan.get('OPlan', 0))
-                    st.markdown('</div>', unsafe_allow_html=True)
-            else:
-                st.info("No checks.")
-        
-        with tab3:
-            st.markdown(f'<div class="subheader">{selected_agent}\'s Analytics</div>', unsafe_allow_html=True)
-            checks_df = get_df(checks_sheet)
-            agent_checks = checks_df[checks_df['Agent Name'] == selected_agent]
-            if not agent_checks.empty:
-                fig, ax = plt.subplots(figsize=(6, 4))
-                agent_checks['Plan'].value_counts().plot(kind='bar', ax=ax, color=['#3B82F6', '#60A5FA', '#93C5FD'])
-                ax.set_title("Checks by Plan", fontsize=14, fontweight='bold')
-                ax.set_ylabel("Count")
-                plt.xticks(rotation=0)
-                st.pyplot(fig)
-            else:
-                st.info("No checks yet for visualization.")
+                    new_agent_code = st.text_input("Agent Code", type="password")
+                
+                add_agent = st.form_submit_button("Add Agent", use_container_width=True)
+            
+            if add_agent:
+                if new_agent_name and new_agent_code:
+                    new_row = [new_agent_name, new_agent_code]
+                    agents_sheet.append_row(new_row)
+                    st.success(f"Agent {new_agent_name} added successfully!")
+                    st.rerun()
+                else:
+                    st.error("Please fill in both fields.")
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
     else:
         st.error("Invalid password.")
     
     if st.button("Back to Control Hub", use_container_width=True):
         st.session_state.page = 'control_hub'
         st.rerun()
-
-
-
-
-
