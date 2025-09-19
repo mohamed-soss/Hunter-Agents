@@ -224,7 +224,7 @@ st.markdown("""
     }
     
     /* Enhanced Buttons */
-    .elite-button {
+    .stButton > button {
         background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0077aa 100%);
         color: #ffffff;
         border: none;
@@ -241,7 +241,7 @@ st.markdown("""
         cursor: pointer;
     }
     
-    .elite-button::before {
+    .stButton > button::before {
         content: '';
         position: absolute;
         top: 0;
@@ -252,11 +252,11 @@ st.markdown("""
         transition: left 0.5s;
     }
     
-    .elite-button:hover::before {
+    .stButton > button:hover::before {
         left: 100%;
     }
     
-    .elite-button:hover {
+    .stButton > button:hover {
         transform: translateY(-3px);
         box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4);
         background: linear-gradient(135deg, #0099cc 0%, #00d4ff 50%, #00b3ff 100%);
@@ -468,14 +468,14 @@ if st.session_state.page == 'control_hub':
     st.markdown('<div class="hero-header slide-in-up">Hunter Agents</div>', unsafe_allow_html=True)
     st.markdown('<div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 4rem;">Professional insurance management system</div>', unsafe_allow_html=True)
     
-    # Enhanced Control Cards - Fixed gap parameter
+    # Enhanced Control Cards
     col1, col2 = st.columns([1, 1])
     
     with col1:
         st.markdown('<div class="control-card fade-in">', unsafe_allow_html=True)
         st.markdown('<h3>Agent Portal</h3>', unsafe_allow_html=True)
         st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Access your personalized dashboard, submit callbacks, and track performance metrics</p>', unsafe_allow_html=True)
-        if st.button("Enter Portal", key="user_portal", help="Access your agent dashboard"):
+        if st.button("Enter Portal", key="user_portal", use_container_width=True):
             st.session_state.page = 'login'
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -484,7 +484,7 @@ if st.session_state.page == 'control_hub':
         st.markdown('<div class="control-card fade-in" style="animation-delay: 0.2s;">', unsafe_allow_html=True)
         st.markdown('<h3>Admin Console</h3>', unsafe_allow_html=True)
         st.markdown('<p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Complete system control, agent management, and performance analytics</p>', unsafe_allow_html=True)
-        if st.button("Admin Access", key="admin_dashboard", help="Access administrative controls"):
+        if st.button("Admin Access", key="admin_dashboard", use_container_width=True):
             st.session_state.page = 'admin'
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -515,7 +515,7 @@ elif st.session_state.page == 'login':
         
         col_btn1, col_btn2 = st.columns([1, 1])
         with col_btn1:
-            if st.button("Login", key="login_submit", help="Authenticate and access portal"):
+            if st.button("Login", key="login_submit", use_container_width=True):
                 matching_row = agents_df[
                     (agents_df['Agent Name'] == selected_agent) & 
                     (agents_df['Agent Code'] == agent_code)
@@ -529,7 +529,7 @@ elif st.session_state.page == 'login':
                     st.error("Invalid credentials. Please try again.")
         
         with col_btn2:
-            if st.button("Back to Hub", key="back_to_hub", help="Return to main menu"):
+            if st.button("Back to Hub", key="back_to_hub", use_container_width=True):
                 st.session_state.page = 'control_hub'
                 st.rerun()
         
@@ -543,12 +543,9 @@ elif st.session_state.page == 'agent_dashboard':
         unsafe_allow_html=True
     )
     
-    # Enhanced Sidebar
+    # Enhanced Sidebar - Removed "Hunter Agents Portal" text
     with st.sidebar:
-        st.markdown('<div style="text-align: center; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">', unsafe_allow_html=True)
-        st.markdown('<h3 style="color: #00d4ff; margin: 0;">Hunter Agents Portal</h3>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
+        # Removed the header text section
         st.markdown('<div style="padding: 1rem; text-align: center;">', unsafe_allow_html=True)
         st.image("hunter logo-02.jpg", width=120, use_column_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
