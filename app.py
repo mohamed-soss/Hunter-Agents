@@ -671,15 +671,15 @@ elif st.session_state.page == 'agent_dashboard':
             st.balloons()
             st.rerun()
         elif submit:
-            st.warning("Please fill in required fields (Full Name & Callback Date)")
+            st.markdown('<div class="elite-card" style="background: rgba(255, 107, 107, 0.1); border-left: 4px solid #ff6b6b; padding: 1rem; margin-bottom: 1rem;">Please fill in required fields (Full Name & Callback Date)</div>', unsafe_allow_html=True)
         
         # Enhanced Callbacks Display
         st.markdown('<div class="subheader slide-in-left">Your Callbacks</div>', unsafe_allow_html=True)
         
         if not agent_callbacks.empty:
             for idx, row in agent_callbacks.iterrows():
-                status_class = f"status-{row['CB Type']}"
                 with st.container():
+                    status_class = f"status-{row['CB Type']}"
                     st.markdown(f'''
                     <div class="callback-card fade-in" style="animation-delay: {idx * 0.1}s;">
                         <div class="callback-header">
@@ -700,6 +700,33 @@ elif st.session_state.page == 'agent_dashboard':
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
+                    
+                    # Edit form for this callback
+                    with st.expander("Edit Callback"):
+                        with st.form(key=f"edit_callback_form_{idx}", clear_on_submit=True):
+                            edit_full_name = st.text_input("Full Name", value=row["Full Name"])
+                            edit_address = st.text_input("Address", value=row["Address"])
+                            edit_mcn = st.text_input("MCN", value=row["MCN"])
+                            edit_dob = st.date_input("DOB", value=datetime.datetime.strptime(row["DOB"], '%Y-%m-%d') if row["DOB"] else datetime.date.today())
+                            edit_number = st.text_input("Number", value=row["Number"])
+                            edit_notes = st.text_area("Notes", value=row["Notes"])
+                            edit_medical_conditions = st.text_area("Medical Conditions", value=row["Medical Conditions"])
+                            edit_cb_date = st.date_input("CB Date", value=datetime.datetime.strptime(row["CB Date"], '%Y-%m-%d') if row["CB Date"] else datetime.date.today())
+                            edit_cb_timing = st.text_input("CB Timing", value=row["CB Timing"])
+                            edit_cb_type = st.selectbox("CB Type", ["cold", "warm", "hot"], index=["cold", "warm", "hot"].index(row["CB Type"]))
+                            
+                            edit_submit = st.form_submit_button("Update Callback")
+                            
+                            if edit_submit:
+                                updated_row = [
+                                    st.session_state.agent_name, edit_full_name, edit_address, edit_mcn, str(edit_dob), 
+                                    edit_number, edit_notes, edit_medical_conditions, str(edit_cb_date), edit_cb_timing, edit_cb_type
+                                ]
+                                # Update the row in Google Sheets
+                                # row.name is the original index in callbacks_df, add 2 for worksheet row (1 for header, 1 for 0-index)
+                                callbacks_sheet.update(range_name=f"A{row.name + 2}:K{row.name + 2}", values=[updated_row])
+                                st.success("Callback updated successfully!")
+                                st.rerun()
         else:
             st.markdown('<div class="elite-card fade-in" style="text-align: center; padding: 3rem;">', unsafe_allow_html=True)
             st.markdown('<h3 style="color: #ffd93d; margin-bottom: 1rem;">Ready to Get Started</h3>', unsafe_allow_html=True)
@@ -771,7 +798,7 @@ elif st.session_state.page == 'admin':
             
             with col4:
                 st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-                avg_response = round(len(agent_filter) / len(agents_df), 1) if agents_df.shape[0] > 0 else 0
+                avg_response = round(len(agent_filter) / len(agents_df), 1) if len(agents_df) > 0 else 0
                 st.markdown(f'<div class="metric-value">{avg_response}</div>', unsafe_allow_html=True)
                 st.markdown('<div class="metric-label">Avg/Agent</div>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
