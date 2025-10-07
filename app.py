@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 import time
+import uuid
 
 # Setup Google Sheets connection
 scope = [
@@ -666,7 +667,8 @@ elif st.session_state.page == 'agent_dashboard':
                 st.session_state.agent_name, full_name, address, mcn, str(dob), 
                 number, notes, medical_conditions, str(cb_date), cb_timing, cb_type
             ]
-            callbacks_sheet.append_row(new_row)
+            # Insert the new callback at row 2 (right after header) instead of appending
+            callbacks_sheet.insert_row(new_row, index=2)
             st.success(f"Callback submitted successfully for {full_name}!")
             st.balloons()
             st.rerun()
